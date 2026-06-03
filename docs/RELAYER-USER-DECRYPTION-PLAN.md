@@ -22,12 +22,13 @@ The app already separates the decryption button from real relayer execution:
 - readiness state marks balance decryption as an external gate
 - action plans identify user decryption as relayer-gated
 - `src/services/relayerUserDecryption.ts` validates and prepares the unsigned request payload shape needed for `userDecrypt`
-- tests cover missing handles, malformed addresses, and the documented 2048-bit batch limit
+- `src/services/signingAdapter.ts` prepares the EIP-712 wallet-signing payload and reports wallet blockers without forcing a signature
+- tests cover missing handles, malformed addresses, the documented 2048-bit batch limit, missing wallet connection, missing signing capability, and address mismatch
 
 ## Implementation Checklist
 
 - Add `@zama-fhe/relayer-sdk` after confirming the currently recommended browser package version.
-- Add a wallet adapter boundary that supports EIP-712 `signTypedData` without storing keys.
+- Connect the wallet adapter boundary to the browser UI and supported wallet provider.
 - Retrieve the selected confidential token balance ciphertext handle from the wrapper or token contract.
 - Ensure ACL permissions exist for the handle before requesting user decryption.
 - Generate the keypair through the relayer instance in-browser.

@@ -5,6 +5,7 @@ import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
+import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
 import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
 describe("wrapper pair model", () => {
@@ -86,6 +87,54 @@ describe("wrapper pair model", () => {
         handles: [{ handle: "0xabc", contractAddress: baseInput.handles[0].contractAddress, bitLength: 2049 }],
       }),
     ).toThrow("exceeds 2048 bits");
+  });
+
+  it("prepares wallet signing payloads without forcing a signature", async () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+    const draft = buildMockUserDecryptionDraft(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+    const request = prepareUserDecryptionSigningRequest(
+      {
+        address: "0x1111111111111111111111111111111111111111",
+        signTypedData: async () => "0xsigned",
+      },
+      draft,
+    );
+
+    expect(request.canSign).toBe(true);
+    expect(request.blockers).toEqual([]);
+    expect(request.payload.types.UserDecryptRequestVerification.map((field) => field.name)).toEqual([
+      "publicKey",
+      "contractAddresses",
+      "startTimestamp",
+      "durationDays",
+    ]);
+    await expect(
+      signUserDecryptionRequest(
+        {
+          address: "0x1111111111111111111111111111111111111111",
+          signTypedData: async (payload) => `0x${payload.message.durationDays}`,
+        },
+        request,
+      ),
+    ).resolves.toBe("0x10");
+  });
+
+  it("blocks user-decryption signing when signer state is incomplete", () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+    const draft = buildMockUserDecryptionDraft(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+
+    expect(prepareUserDecryptionSigningRequest({ address: null }, draft)).toMatchObject({
+      canSign: false,
+      blockers: ["wallet:not_connected", "wallet:sign_typed_data_unavailable"],
+    });
+    expect(
+      prepareUserDecryptionSigningRequest({ address: "0x2222222222222222222222222222222222222222", signTypedData: async () => "0x" }, draft),
+    ).toMatchObject({
+      canSign: false,
+      blockers: ["wallet:address_mismatch"],
+    });
   });
 
   it("separates local demo readiness from external submission gates", () => {
