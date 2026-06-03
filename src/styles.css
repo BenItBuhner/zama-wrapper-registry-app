@@ -250,6 +250,11 @@ dd {
   background: #ffffff;
 }
 
+.secondary-action:disabled {
+  cursor: default;
+  opacity: 0.62;
+}
+
 .balance-readout {
   margin: 14px 0 0;
   border-radius: 8px;
@@ -327,6 +332,10 @@ dd {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.wallet-connect {
+  width: fit-content;
 }
 
 .readiness-item {

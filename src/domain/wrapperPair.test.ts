@@ -7,7 +7,7 @@ import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submis
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
-import { inspectInjectedWallet } from "../services/walletReadiness";
+import { connectInjectedWallet, inspectInjectedWallet } from "../services/walletReadiness";
 import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
 describe("wrapper pair model", () => {
@@ -193,6 +193,25 @@ describe("wrapper pair model", () => {
       blockers: [],
     });
     expect(calls).toEqual(["eth_accounts"]);
+  });
+
+  it("connects injected wallets only through the explicit connect path", async () => {
+    const calls: string[] = [];
+    const provider: Eip1193Provider = {
+      async request(args) {
+        calls.push(args.method);
+        if (args.method === "eth_requestAccounts") return ["0x2222222222222222222222222222222222222222"];
+        throw new Error(`unexpected method ${args.method}`);
+      },
+    };
+
+    await expect(connectInjectedWallet(provider)).resolves.toMatchObject({
+      status: "ready",
+      address: "0x2222222222222222222222222222222222222222",
+      canPrepareUserDecryptionSignature: true,
+      blockers: [],
+    });
+    expect(calls).toEqual(["eth_requestAccounts"]);
   });
 
   it("separates local demo readiness from external submission gates", () => {

@@ -5,7 +5,7 @@ import { networkConfigs } from "./config/networks";
 import type { Eip1193Provider } from "./services/providerAdapter";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
-import { inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
+import { connectInjectedWallet, inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
 import { buildActionPlan, decryptMockBalance } from "./services/wrapperActions";
 import "./styles.css";
 
@@ -24,6 +24,7 @@ export default function App() {
   const [decryptedBalance, setDecryptedBalance] = useState<string | null>(null);
   const [registryStatus, setRegistryStatus] = useState<string>("loading");
   const [walletReadiness, setWalletReadiness] = useState<WalletReadiness | null>(null);
+  const [walletConnecting, setWalletConnecting] = useState(false);
 
   const dataSource = useMemo(() => makeConfiguredRegistryDataSource(), []);
 
@@ -54,6 +55,12 @@ export default function App() {
 
   async function revealBalance(pair: WrapperPair) {
     setDecryptedBalance(await decryptMockBalance(pair));
+  }
+
+  async function connectWallet() {
+    setWalletConnecting(true);
+    setWalletReadiness(await connectInjectedWallet(typeof window === "undefined" ? null : window.ethereum));
+    setWalletConnecting(false);
   }
 
   return (
@@ -184,6 +191,15 @@ export default function App() {
                       value={walletReadiness?.canPrepareUserDecryptionSignature ? "ready to prepare" : "blocked"}
                     />
                   </div>
+                  <button
+                    className="secondary-action wallet-connect"
+                    disabled={walletConnecting || walletReadiness?.status === "ready"}
+                    onClick={() => void connectWallet()}
+                    type="button"
+                  >
+                    <Wallet aria-hidden="true" size={17} />
+                    {walletConnecting ? "Connecting" : walletReadiness?.status === "ready" ? "Wallet connected" : "Connect wallet"}
+                  </button>
                 </div>
               </div>
               <div>
