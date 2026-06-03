@@ -3,6 +3,7 @@ import { CheckCircle2, DatabaseZap, Droplets, Eye, KeyRound, LockKeyhole, Networ
 import { formatTokenAmount, pairIsHealthy, type SupportedNetwork, type WrapperPair } from "./domain/wrapperPair";
 import { networkConfigs } from "./config/networks";
 import type { Eip1193Provider } from "./services/providerAdapter";
+import { buildLiveDemoPreflight } from "./services/liveDemoPreflight";
 import { inspectProviderNetwork, switchProviderNetwork, type ProviderNetworkReadiness } from "./services/providerNetwork";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
@@ -58,6 +59,10 @@ export default function App() {
   const transactionIntents = useMemo(
     () => (selected ? buildWrapperTransactionIntents(selected, walletReadiness?.address ?? null) : []),
     [selected, walletReadiness?.address],
+  );
+  const liveDemoPreflight = useMemo(
+    () => (selected ? buildLiveDemoPreflight(selected, walletReadiness, networkReadiness, transactionIntents) : null),
+    [networkReadiness, selected, transactionIntents, walletReadiness],
   );
   const readiness = useMemo(() => buildSubmissionReadiness(dataSource.mode === "chain"), [dataSource.mode]);
 
@@ -235,6 +240,26 @@ export default function App() {
             </section>
 
             <section className="readiness-panel" aria-label="Submission readiness">
+              {liveDemoPreflight ? (
+                <div>
+                  <h3>Live demo preflight</h3>
+                  <div className="preflight-summary">
+                    <ShieldCheck aria-hidden="true" size={18} />
+                    {liveDemoPreflight.canStartSepoliaTransactions
+                      ? "Sepolia faucet, approval, and wrap review are ready."
+                      : "Sepolia demo transactions are still gated."}
+                  </div>
+                  <div className="readiness-grid">
+                    {liveDemoPreflight.items.map((item) => (
+                      <div className={`readiness-item ${item.status}`} key={item.label}>
+                        <span>{item.status}</span>
+                        <strong>{item.label}</strong>
+                        <p>{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
               <div>
                 <h3>Wallet boundary</h3>
                 <div className="wallet-readiness">

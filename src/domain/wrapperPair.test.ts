@@ -3,6 +3,7 @@ import { formatTokenAmount, pairIsHealthy, validatePair } from "./wrapperPair";
 import { listWrapperPairs } from "../services/mockRegistry";
 import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
+import { buildLiveDemoPreflight } from "../services/liveDemoPreflight";
 import { inspectProviderNetwork, switchProviderNetwork } from "../services/providerNetwork";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
 import { buildDemoUnderlyingAmount, buildWrapperTransactionIntents } from "../services/transactionIntents";
@@ -105,6 +106,67 @@ describe("wrapper pair model", () => {
       status: "requires-relayer",
       data: null,
     });
+  });
+
+  it("summarizes live Sepolia demo preflight readiness", () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.id === "sepolia-usdc-cusdcmock");
+    expect(sepoliaPair).toBeDefined();
+    const wallet = {
+      status: "ready" as const,
+      address: "0x1111111111111111111111111111111111111111",
+      canPrepareUserDecryptionSignature: true,
+      blockers: [],
+      detail: "ready",
+    };
+    const network = {
+      status: "matched" as const,
+      currentChainId: networkConfigs.sepolia.chainId,
+      expectedChainId: networkConfigs.sepolia.chainId,
+      expectedNetwork: "sepolia" as const,
+      detail: "matched",
+    };
+    const preflight = buildLiveDemoPreflight(
+      sepoliaPair!,
+      wallet,
+      network,
+      buildWrapperTransactionIntents(sepoliaPair!, wallet.address),
+    );
+
+    expect(preflight.canStartSepoliaTransactions).toBe(true);
+    expect(preflight.items.filter((item) => item.status === "ready").map((item) => item.label)).toEqual([
+      "Sepolia demo pair",
+      "Wallet connected",
+      "Network matched",
+      "Unsigned faucet intent",
+      "Unsigned approval intent",
+      "Unsigned wrap intent",
+    ]);
+    expect(preflight.items.at(-1)).toMatchObject({
+      label: "Relayer unwrap/finalize",
+      status: "external-gate",
+    });
+  });
+
+  it("blocks live demo preflight when wallet, network, or faucet path is missing", () => {
+    const mainnetPair = seededOfficialPairs.find((pair) => pair.id === "mainnet-usdc-cusdc");
+    expect(mainnetPair).toBeDefined();
+    const preflight = buildLiveDemoPreflight(
+      mainnetPair!,
+      null,
+      {
+        status: "mismatch",
+        currentChainId: networkConfigs.sepolia.chainId,
+        expectedChainId: networkConfigs.mainnet.chainId,
+        expectedNetwork: "mainnet",
+        detail: "wrong chain",
+      },
+      buildWrapperTransactionIntents(mainnetPair!, null),
+    );
+
+    expect(preflight.canStartSepoliaTransactions).toBe(false);
+    expect(preflight.items.filter((item) => item.status === "blocked").map((item) => item.label)).toEqual(
+      expect.arrayContaining(["Sepolia demo pair", "Wallet connected", "Network matched", "Unsigned faucet intent"]),
+    );
   });
 
   it("drafts relayer user-decryption requests without signing", () => {

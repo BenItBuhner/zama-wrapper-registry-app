@@ -398,6 +398,18 @@ dd {
   width: fit-content;
 }
 
+.preflight-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #c8d5ca;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 9px 12px;
+  font-weight: 800;
+}
+
 .network-readout {
   margin: 0;
   color: #60716c;
@@ -444,6 +456,16 @@ dd {
 .readiness-item.external-gate span {
   background: #fff1df;
   color: #8b4c00;
+}
+
+.readiness-item.ready span {
+  background: #e7f5ec;
+  color: #137044;
+}
+
+.readiness-item.blocked span {
+  background: #ffe6e6;
+  color: #9e2626;
 }
 
 .reference-list {
