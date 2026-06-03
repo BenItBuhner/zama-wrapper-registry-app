@@ -5,6 +5,7 @@ import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
+import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
 import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
@@ -135,6 +136,39 @@ describe("wrapper pair model", () => {
       canSign: false,
       blockers: ["wallet:address_mismatch"],
     });
+  });
+
+  it("adapts injected providers without touching real browser wallets", async () => {
+    const calls: Array<{ method: string; params?: unknown[] }> = [];
+    const provider: Eip1193Provider = {
+      async request(args) {
+        calls.push(args);
+        if (args.method === "eth_requestAccounts") return ["0x1111111111111111111111111111111111111111"];
+        if (args.method === "eth_signTypedData_v4") return "0xfakesignature";
+        throw new Error(`unexpected method ${args.method}`);
+      },
+    };
+    const adapter = await connectInjectedProvider(provider);
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+    const draft = buildMockUserDecryptionDraft(sepoliaPair!, adapter.address!);
+    const request = prepareUserDecryptionSigningRequest(adapter, draft);
+
+    await expect(signUserDecryptionRequest(adapter, request)).resolves.toBe("0xfakesignature");
+    expect(calls.map((call) => call.method)).toEqual(["eth_requestAccounts", "eth_signTypedData_v4"]);
+    expect(calls[1].params?.[0]).toBe("0x1111111111111111111111111111111111111111");
+    expect(typeof calls[1].params?.[1]).toBe("string");
+  });
+
+  it("fails closed for absent or malformed injected providers", async () => {
+    await expect(readInjectedProvider(undefined)).resolves.toEqual({ address: null });
+    await expect(
+      readInjectedProvider({
+        async request() {
+          return [17];
+        },
+      }),
+    ).rejects.toThrow("non-string account");
   });
 
   it("separates local demo readiness from external submission gates", () => {
