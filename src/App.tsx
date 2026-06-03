@@ -1,13 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, DatabaseZap, Droplets, Eye, LockKeyhole, RefreshCw, ShieldCheck } from "lucide-react";
+import { CheckCircle2, DatabaseZap, Droplets, Eye, KeyRound, LockKeyhole, RefreshCw, ShieldCheck, Wallet } from "lucide-react";
 import { formatTokenAmount, pairIsHealthy, type SupportedNetwork, type WrapperPair } from "./domain/wrapperPair";
 import { networkConfigs } from "./config/networks";
+import type { Eip1193Provider } from "./services/providerAdapter";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
+import { inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
 import { buildActionPlan, decryptMockBalance } from "./services/wrapperActions";
 import "./styles.css";
 
 type PairFilter = SupportedNetwork | "all";
+
+declare global {
+  interface Window {
+    ethereum?: Eip1193Provider;
+  }
+}
 
 export default function App() {
   const [pairs, setPairs] = useState<WrapperPair[]>([]);
@@ -15,6 +23,7 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [decryptedBalance, setDecryptedBalance] = useState<string | null>(null);
   const [registryStatus, setRegistryStatus] = useState<string>("loading");
+  const [walletReadiness, setWalletReadiness] = useState<WalletReadiness | null>(null);
 
   const dataSource = useMemo(() => makeConfiguredRegistryDataSource(), []);
 
@@ -30,6 +39,10 @@ export default function App() {
         setRegistryStatus(error instanceof Error ? error.message : "registry load failed");
       });
   }, [dataSource]);
+
+  useEffect(() => {
+    inspectInjectedWallet(typeof window === "undefined" ? null : window.ethereum).then(setWalletReadiness);
+  }, []);
 
   const visiblePairs = useMemo(
     () => pairs.filter((pair) => filter === "all" || pair.network === filter),
@@ -155,6 +168,24 @@ export default function App() {
             ) : null}
 
             <section className="readiness-panel" aria-label="Submission readiness">
+              <div>
+                <h3>Wallet boundary</h3>
+                <div className="wallet-readiness">
+                  <div className={`readiness-item ${walletReadiness?.status === "ready" ? "complete" : "external-gate"}`}>
+                    <span>{walletReadiness?.status ?? "checking"}</span>
+                    <strong>Injected provider</strong>
+                    <p>{walletReadiness?.detail ?? "Checking browser provider state."}</p>
+                  </div>
+                  <div className="wallet-facts">
+                    <Metric icon={<Wallet size={18} />} label="Account" value={walletReadiness?.address ?? "not connected"} />
+                    <Metric
+                      icon={<KeyRound size={18} />}
+                      label="User decrypt signature"
+                      value={walletReadiness?.canPrepareUserDecryptionSignature ? "ready to prepare" : "blocked"}
+                    />
+                  </div>
+                </div>
+              </div>
               <div>
                 <h3>Submission readiness</h3>
                 <div className="readiness-grid">

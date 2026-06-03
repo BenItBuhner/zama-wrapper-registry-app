@@ -7,6 +7,7 @@ import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submis
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
+import { inspectInjectedWallet } from "../services/walletReadiness";
 import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
 describe("wrapper pair model", () => {
@@ -169,6 +170,29 @@ describe("wrapper pair model", () => {
         },
       }),
     ).rejects.toThrow("non-string account");
+  });
+
+  it("reports wallet readiness without requesting accounts or signing", async () => {
+    const calls: string[] = [];
+    const provider: Eip1193Provider = {
+      async request(args) {
+        calls.push(args.method);
+        if (args.method === "eth_accounts") return ["0x1111111111111111111111111111111111111111"];
+        throw new Error(`unexpected method ${args.method}`);
+      },
+    };
+
+    await expect(inspectInjectedWallet(undefined)).resolves.toMatchObject({
+      status: "provider-missing",
+      blockers: ["wallet:provider_missing"],
+    });
+    await expect(inspectInjectedWallet(provider)).resolves.toMatchObject({
+      status: "ready",
+      address: "0x1111111111111111111111111111111111111111",
+      canPrepareUserDecryptionSignature: true,
+      blockers: [],
+    });
+    expect(calls).toEqual(["eth_accounts"]);
   });
 
   it("separates local demo readiness from external submission gates", () => {
