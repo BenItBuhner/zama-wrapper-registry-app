@@ -75,6 +75,8 @@ No wallet private key, real signature, payout account, RPC secret, live transact
 - Published article: [docs/ARTICLE.md](docs/ARTICLE.md)
 - Demo video: https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
 - Article draft: [docs/ARTICLE-DRAFT.md](docs/ARTICLE-DRAFT.md)
+- X thread draft: [docs/X-THREAD-DRAFT.md](docs/X-THREAD-DRAFT.md)
+- Real-person pitch script: [docs/REAL-PERSON-PITCH-SCRIPT.md](docs/REAL-PERSON-PITCH-SCRIPT.md)
 - Form answers draft: [docs/FORM-ANSWERS-DRAFT.md](docs/FORM-ANSWERS-DRAFT.md)
 - Relayer user-decryption plan: [docs/RELAYER-USER-DECRYPTION-PLAN.md](docs/RELAYER-USER-DECRYPTION-PLAN.md)
 - Live relayer source: [src/services/liveRelayerUserDecryption.ts](src/services/liveRelayerUserDecryption.ts)

@@ -53,6 +53,16 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
         status: "ready",
       },
       {
+        label: "X thread draft",
+        href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/X-THREAD-DRAFT.md",
+        status: "local-validation",
+      },
+      {
+        label: "Real-person pitch script",
+        href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/REAL-PERSON-PITCH-SCRIPT.md",
+        status: "local-validation",
+      },
+      {
         label: "Demo video",
         href: "https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm",
         status: "ready",

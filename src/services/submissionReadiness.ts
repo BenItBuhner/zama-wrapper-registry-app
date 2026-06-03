@@ -49,6 +49,14 @@ export const zamaReferenceLinks: ReferenceLink[] = [
     href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md",
   },
   {
+    label: "X thread draft",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/X-THREAD-DRAFT.md",
+  },
+  {
+    label: "Real-person pitch script",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/REAL-PERSON-PITCH-SCRIPT.md",
+  },
+  {
     label: "Demo video",
     href: "https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm",
   },
@@ -85,7 +93,7 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
       label: "Submission assets",
       status: "external-gate",
       detail:
-        "Public demo, packet, demo script, article, credential-free demo video, and form-answer draft are ready; the live Season 3 form still requires real wallet/user-decryption evidence, real-person pitch/X evidence, and payout/form submission before July 7, 2026.",
+        "Public demo, packet, demo script, article, X draft, pitch script, credential-free demo video, and form-answer draft are ready; the live Season 3 form still requires real wallet/user-decryption evidence, real-person pitch/X publication, and payout/form submission before July 7, 2026.",
     },
   ];
 }

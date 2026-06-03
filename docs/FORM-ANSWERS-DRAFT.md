@@ -65,11 +65,15 @@ Current status: credential-free public demo video generated from the deployed ap
 
 Season 3 form requirement: a 3-minute real-person pitch video. AI-generated video or voice will not be considered. The credential-free screen recording is useful evidence but should not be treated as satisfying the real-person pitch requirement by itself.
 
+Pitch script source: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/REAL-PERSON-PITCH-SCRIPT.md
+
 ## Article Or X Thread Link
 
 https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md
 
 Season 3 form requirement: a thread or article published on X introducing the project. The GitHub article is the current public article asset, but it should be mirrored or introduced on X before final submission.
+
+X thread draft source: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/X-THREAD-DRAFT.md
 
 ## Transaction Evidence
 

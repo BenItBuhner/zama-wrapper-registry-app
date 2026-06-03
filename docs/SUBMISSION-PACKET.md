@@ -8,6 +8,8 @@
 - Demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
 - Demo video: https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
 - Published article: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md
+- X thread draft: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/X-THREAD-DRAFT.md
+- Real-person pitch script: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/REAL-PERSON-PITCH-SCRIPT.md
 - GitHub Pages workflow: https://github.com/BenItBuhner/zama-wrapper-registry-app/actions/workflows/pages.yml
 - Form answers draft: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/FORM-ANSWERS-DRAFT.md
 
@@ -54,7 +56,7 @@ Transaction-intent coverage:
 
 Evidence-packet coverage:
 
-- Public repository, GitHub Pages demo, demo video, published article, submission packet, demo script, relayer plan, and form-answer draft links are visible in the app.
+- Public repository, GitHub Pages demo, demo video, published article, X draft, pitch script, submission packet, demo script, relayer plan, and form-answer draft links are visible in the app.
 - Required local validation commands are visible in the app: `bun run test`, `bun run build`, and `bun run build:pages`.
 - Remaining external gates are explicitly separated from local validation so the app does not claim wallet signatures, transaction proof, video publication, article/X publication, or form submission before they happen.
 
