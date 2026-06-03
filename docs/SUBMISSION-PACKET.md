@@ -19,7 +19,8 @@
 - Detects an injected EIP-1193 wallet provider without forcing connection.
 - Offers a user-clicked wallet connection path through `eth_requestAccounts`.
 - Checks the selected wrapper network through `eth_chainId` and offers a user-clicked `wallet_switchEthereumChain` path for Sepolia/mainnet alignment.
-- Prepares unsigned transaction intents for Sepolia faucet, ERC-20 approval, wrapper wrap, relayer-gated unwrap request, and unwrap finalization review.
+- Prepares transaction intents for Sepolia faucet, ERC-20 approval, wrapper wrap, relayer-gated unwrap request, and unwrap finalization review.
+- Offers explicit Sepolia-only wallet submission controls for ready faucet, approval, and wrap intents after wallet/network checks.
 - Prepares typed user-decryption signing payloads behind an explicit adapter boundary without forcing a real signature in the public demo.
 - Packages a final-form evidence checklist with public links, validation commands, completed local boundaries, and remaining external gates.
 - Separates local-only proof from external gates so the app does not imply a wallet transaction happened before it did.
@@ -40,12 +41,13 @@ Latest GitHub Pages validation:
 - `https://benitbuhner.github.io/zama-wrapper-registry-app/` returned HTTP 200.
 - Raw source URLs for `src/services/submissionEvidence.ts` and `docs/SUBMISSION-PACKET.md` returned HTTP 200.
 
-Unsigned transaction-intent coverage:
+Transaction-intent coverage:
 
-- Sepolia faucet intent builds mock-token `mint(address,uint256)` calldata only after a connected wallet address is known.
+- Sepolia faucet intent builds mock-token `mint(address,uint256)` calldata only after a connected wallet address is known, then can be submitted through a user-clicked Sepolia wallet action.
 - Approval intent builds ERC-20 `approve(address,uint256)` calldata for the selected wrapper and one demo token amount.
 - Wrap intent builds wrapper `wrap(uint256)` calldata for the same demo amount.
 - Mainnet faucet intent fails closed as not supported.
+- Mainnet transaction submission is blocked from the public app; only Sepolia demo intents can be sent.
 - Unwrap and finalize intents record target contract, method shape, and required live relayer inputs while keeping calldata null until encrypted handles/proofs exist.
 
 Evidence-packet coverage:
@@ -56,7 +58,7 @@ Evidence-packet coverage:
 
 ## Remaining External Gates
 
-- Execute Sepolia-only demo transactions with a real wallet.
+- Execute Sepolia-only demo transactions with a real wallet through the explicit submit controls and record the hashes.
 - Wire the relayer SDK user-decryption flow against a real encrypted balance handle.
 - Produce a real EIP-712 signature and relayer user-decryption response from a connected wallet.
 - Replace or supplement the credential-free demo video if the final reviewer requires live wallet transaction footage.

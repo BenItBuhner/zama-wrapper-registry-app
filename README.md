@@ -27,7 +27,7 @@ Current implemented surface:
 - injected wallet readiness via `eth_accounts`
 - explicit user-clicked wallet connection via `eth_requestAccounts`
 - selected-wrapper network readiness via `eth_chainId` plus user-clicked `wallet_switchEthereumChain`
-- unsigned transaction-intent review for Sepolia faucet, ERC-20 approval, wrapper wrap, relayer-gated unwrap, and finalize steps
+- transaction-intent review plus explicit Sepolia-only wallet submission controls for faucet, ERC-20 approval, and wrapper wrap
 - EIP-712 user-decryption signing payload preparation behind a wallet adapter boundary
 - submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
 - final-form evidence packet with public links, validation commands, remaining external gates, and no secret/signature material
@@ -45,7 +45,7 @@ bun run build:pages
 
 - Registry reads follow Zama's documented `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress` patterns, including the validity flag check before use.
 - Wrapper flow follows the documented ERC-20 approval before wrap, and the two-step unwrap plus public decryption/finalize flow.
-- `src/services/transactionIntents.ts` prepares unsigned call data only where the app has deterministic inputs: Sepolia mock faucet, ERC-20 approval, and wrapper `wrap(uint256)`. Unwrap and finalize stay relayer-gated rather than inventing live encrypted-handle calldata.
+- `src/services/transactionIntents.ts` prepares call data only where the app has deterministic inputs: Sepolia mock faucet, ERC-20 approval, and wrapper `wrap(uint256)`. `src/services/transactionSubmission.ts` submits those ready intents only through explicit Sepolia wallet clicks after network checks. Unwrap and finalize stay relayer-gated rather than inventing live encrypted-handle calldata.
 - Official deployed address seeds come from `zama-ai/protocol-apps` address docs for Ethereum mainnet and Sepolia.
 - Without `VITE_SEPOLIA_RPC_URL` or `VITE_MAINNET_RPC_URL`, the app uses local seeded data so tests/builds stay deterministic.
 
@@ -53,7 +53,7 @@ bun run build:pages
 
 This repository is not a final bounty submission yet. Remaining external gates:
 
-- connect a wallet and execute Sepolia-only demo transactions
+- connect a wallet and execute Sepolia-only demo transactions through the explicit submit controls
 - wire the relayer SDK user-decryption flow with EIP-712 signatures
 - record a real demo video
 - publish the required article or X thread outside this repository

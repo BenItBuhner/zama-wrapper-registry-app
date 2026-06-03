@@ -104,7 +104,7 @@ export function buildWrapperTransactionIntents(pair: WrapperPair, userAddress: s
           ]
         : [],
       note: pair.faucetSupported
-        ? "Sepolia-only mock-token faucet intent. The UI prepares the call data but does not submit it."
+        ? "Sepolia-only mock-token faucet intent. Submission is available only through an explicit wallet click."
         : "Mainnet wrapper pairs do not expose a faucet path.",
     },
     {
@@ -123,7 +123,7 @@ export function buildWrapperTransactionIntents(pair: WrapperPair, userAddress: s
         { name: "spender", type: "address", value: pair.wrapperAddress },
         { name: "amount", type: "uint256", value: amount.toString() },
       ],
-      note: "Unsigned ERC-20 approval intent for the selected wrapper contract.",
+      note: "ERC-20 approval intent for the selected wrapper contract. Submission is available only on Sepolia through an explicit wallet click.",
     },
     {
       kind: "wrap",
@@ -138,7 +138,7 @@ export function buildWrapperTransactionIntents(pair: WrapperPair, userAddress: s
         args: [amount],
       }),
       parameters: [{ name: "amount", type: "uint256", value: amount.toString() }],
-      note: "Unsigned wrapper call intent. Wallet submission remains outside this demo boundary.",
+      note: "Wrapper call intent. Submission is available only on Sepolia through an explicit wallet click.",
     },
     {
       kind: "unwrap",

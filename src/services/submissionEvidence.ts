@@ -78,7 +78,7 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Unsigned transaction review",
         status: "ready",
-        detail: "Sepolia faucet, ERC-20 approval, and wrapper wrap calldata are prepared for review without submitting transactions.",
+        detail: "Sepolia faucet, ERC-20 approval, and wrapper wrap calldata are prepared and can be submitted only through explicit Sepolia wallet clicks.",
       },
       {
         label: "Relayer user-decryption boundary",
@@ -88,11 +88,11 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Final bounty evidence",
         status: "external-gate",
-        detail: "Demo video and article are published; final bounty evidence still needs real Sepolia transactions, live user-decryption output, final form submission, and payout details.",
+        detail: "Demo video and article are published; final bounty evidence still needs real Sepolia transaction hashes, live user-decryption output, final form submission, and payout details.",
       },
     ],
     remainingExternalGates: [
-      "Connect a real browser wallet and execute Sepolia-only faucet/approve/wrap demo transactions.",
+      "Connect a real browser wallet and execute Sepolia-only faucet/approve/wrap demo transactions through the explicit submit controls.",
       "Use the explicit UI signing control with a real browser wallet to collect a live user-decryption EIP-712 signature.",
       "Run live relayer SDK user decryption against a real encrypted balance handle.",
       "Replace or supplement the credential-free demo video if the bounty reviewer requires live wallet transaction footage.",

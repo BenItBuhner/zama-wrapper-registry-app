@@ -66,7 +66,7 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
     {
       label: "Wrap and unwrap transactions",
       status: "external-gate",
-      detail: "Requires wallet signing, ERC-20 approval, wrap call, unwrap request, and finalize after public decryption.",
+      detail: "Sepolia faucet, approval, and wrap submit controls are wired; live completion still requires real wallet-confirmed hashes plus relayer-gated unwrap/finalize.",
     },
     {
       label: "Balance decryption",

@@ -16,7 +16,7 @@ https://benitbuhner.github.io/zama-wrapper-registry-app/
 
 ## Short Description
 
-Confidential Wrapper Registry is a browser dApp for inspecting Zama ERC-20 to ERC-7984 confidential wrapper pairs on Sepolia and Ethereum mainnet. It shows official registry/wrapper addresses, validates wrapper-pair health, separates wallet and network readiness, prepares unsigned faucet/approve/wrap transaction intents, and documents the relayer user-decryption path without claiming live signatures before they happen.
+Confidential Wrapper Registry is a browser dApp for inspecting Zama ERC-20 to ERC-7984 confidential wrapper pairs on Sepolia and Ethereum mainnet. It shows official registry/wrapper addresses, validates wrapper-pair health, separates wallet and network readiness, prepares faucet/approve/wrap transaction intents, exposes explicit Sepolia-only submit controls, and documents the relayer user-decryption path without claiming live signatures before they happen.
 
 ## What Was Built
 
@@ -26,7 +26,7 @@ Confidential Wrapper Registry is a browser dApp for inspecting Zama ERC-20 to ER
 - Wallet readiness boundary using passive `eth_accounts` inspection.
 - User-clicked wallet connection through `eth_requestAccounts`.
 - Network readiness and user-clicked chain switching through `eth_chainId` and `wallet_switchEthereumChain`.
-- Unsigned Sepolia faucet, ERC-20 approval, and wrapper `wrap(uint256)` transaction intent review.
+- Sepolia faucet, ERC-20 approval, and wrapper `wrap(uint256)` transaction intent review plus explicit Sepolia-only wallet submission controls.
 - Fail-closed relayer-gated unwrap and finalize intent placeholders.
 - Typed relayer user-decryption draft and EIP-712 signing boundary.
 - Public evidence packet with links, validation commands, completed local boundaries, and remaining external gates.
@@ -55,7 +55,7 @@ Latest verified result:
 
 https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
 
-Current status: credential-free public demo video generated from the deployed app. It shows registry browsing, unsigned transaction intents, live-demo preflight gates, and the evidence packet. Replace or supplement it if the final reviewer requires live wallet transaction footage.
+Current status: credential-free public demo video generated from the deployed app. It shows registry browsing, transaction intents, live-demo preflight gates, and the evidence packet. Replace or supplement it if the final reviewer requires live wallet transaction footage.
 
 ## Article Or X Thread Link
 

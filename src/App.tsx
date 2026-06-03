@@ -21,6 +21,7 @@ import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionEvidencePacket } from "./services/submissionEvidence";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
 import { buildWrapperTransactionIntents } from "./services/transactionIntents";
+import { submitWrapperTransactionIntent } from "./services/transactionSubmission";
 import {
   buildUserDecryptionSigningSession,
   signUserDecryptionSigningSession,
@@ -51,6 +52,8 @@ export default function App() {
   const [signingSession, setSigningSession] = useState<UserDecryptionSigningSession | null>(null);
   const [signatureStatus, setSignatureStatus] = useState<string>("No user-decryption signature requested.");
   const [signingBusy, setSigningBusy] = useState(false);
+  const [transactionStatuses, setTransactionStatuses] = useState<Record<string, string>>({});
+  const [transactionBusy, setTransactionBusy] = useState<Record<string, boolean>>({});
 
   const dataSource = useMemo(() => makeConfiguredRegistryDataSource(), []);
 
@@ -139,6 +142,36 @@ export default function App() {
     }
   }
 
+  async function submitIntent(kind: string) {
+    const intent = transactionIntents.find((candidate) => candidate.kind === kind);
+    if (!intent) return;
+
+    setTransactionBusy((current) => ({ ...current, [kind]: true }));
+    setTransactionStatuses((current) => ({ ...current, [kind]: "Requesting wallet transaction submission." }));
+    try {
+      const provider = typeof window === "undefined" ? null : window.ethereum;
+      const wallet = await connectInjectedProvider(provider);
+      const network = selected ? await inspectProviderNetwork(provider, selected.network) : null;
+      setWalletReadiness(await inspectInjectedWallet(provider));
+      setNetworkReadiness(network);
+
+      const result = await submitWrapperTransactionIntent({
+        provider,
+        intent,
+        fromAddress: wallet.address,
+        network,
+      });
+      setTransactionStatuses((current) => ({ ...current, [kind]: `${result.detail} Hash ${result.hash.slice(0, 18)}...` }));
+    } catch (error: unknown) {
+      setTransactionStatuses((current) => ({
+        ...current,
+        [kind]: error instanceof Error ? error.message : "Transaction submission failed.",
+      }));
+    } finally {
+      setTransactionBusy((current) => ({ ...current, [kind]: false }));
+    }
+  }
+
   return (
     <main className="app-shell">
       <section className="topbar">
@@ -176,6 +209,8 @@ export default function App() {
                 setDecryptedBalance(null);
                 setSigningSession(null);
                 setSignatureStatus("No user-decryption signature requested.");
+                setTransactionStatuses({});
+                setTransactionBusy({});
               }}
               type="button"
             >
@@ -288,6 +323,18 @@ export default function App() {
                     </div>
                   </dl>
                   <p>{intent.note}</p>
+                  <div className="transaction-submit-row">
+                    <button
+                      className="secondary-action wallet-connect"
+                      disabled={transactionBusy[intent.kind] || intent.status !== "ready-to-build" || selected.network !== "sepolia"}
+                      onClick={() => void submitIntent(intent.kind)}
+                      type="button"
+                    >
+                      <Wallet aria-hidden="true" size={17} />
+                      {transactionBusy[intent.kind] ? "Submitting" : "Submit on Sepolia"}
+                    </button>
+                    <p>{transactionStatuses[intent.kind] ?? "No transaction submitted."}</p>
+                  </div>
                 </article>
               ))}
             </section>

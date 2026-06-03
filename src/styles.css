@@ -358,6 +358,14 @@ dd {
   line-height: 1.45;
 }
 
+.transaction-submit-row {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  border-top: 1px solid #eef1ef;
+  padding-top: 10px;
+}
+
 .readiness-panel {
   display: grid;
   gap: 18px;

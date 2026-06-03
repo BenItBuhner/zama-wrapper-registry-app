@@ -7,6 +7,7 @@ import { buildLiveDemoPreflight } from "../services/liveDemoPreflight";
 import { inspectProviderNetwork, switchProviderNetwork } from "../services/providerNetwork";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
 import { buildDemoUnderlyingAmount, buildWrapperTransactionIntents } from "../services/transactionIntents";
+import { submitWrapperTransactionIntent } from "../services/transactionSubmission";
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
@@ -396,6 +397,111 @@ describe("wrapper pair model", () => {
     });
     expect(calls.map((call) => call.method)).toEqual(["eth_chainId", "wallet_switchEthereumChain", "eth_chainId"]);
     expect(calls[1].params).toEqual([{ chainId: "0xaa36a7" }]);
+  });
+
+  it("submits ready Sepolia transaction intents through an explicit wallet call", async () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.id === "sepolia-usdc-cusdcmock");
+    expect(sepoliaPair).toBeDefined();
+    const [faucet] = buildWrapperTransactionIntents(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+    const calls: Array<{ method: string; params?: unknown[] }> = [];
+    const provider: Eip1193Provider = {
+      async request(args) {
+        calls.push(args);
+        if (args.method === "eth_sendTransaction") return "0xabc123";
+        throw new Error(`unexpected method ${args.method}`);
+      },
+    };
+
+    await expect(
+      submitWrapperTransactionIntent({
+        provider,
+        intent: faucet,
+        fromAddress: "0x1111111111111111111111111111111111111111",
+        network: {
+          status: "matched",
+          currentChainId: networkConfigs.sepolia.chainId,
+          expectedChainId: networkConfigs.sepolia.chainId,
+          expectedNetwork: "sepolia",
+          detail: "matched",
+        },
+      }),
+    ).resolves.toMatchObject({ hash: "0xabc123" });
+    expect(calls).toHaveLength(1);
+    expect(calls[0].method).toBe("eth_sendTransaction");
+    expect(calls[0].params?.[0]).toMatchObject({
+      from: "0x1111111111111111111111111111111111111111",
+      to: sepoliaPair!.underlying.address,
+      value: "0x0",
+    });
+  });
+
+  it("blocks transaction submission outside the Sepolia ready path", async () => {
+    const mainnetPair = seededOfficialPairs.find((pair) => pair.id === "mainnet-usdc-cusdc");
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.id === "sepolia-usdc-cusdcmock");
+    expect(mainnetPair).toBeDefined();
+    expect(sepoliaPair).toBeDefined();
+    const [, mainnetApprove] = buildWrapperTransactionIntents(mainnetPair!, "0x1111111111111111111111111111111111111111");
+    const [sepoliaFaucet] = buildWrapperTransactionIntents(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+    const provider: Eip1193Provider = {
+      async request() {
+        return "0xabc123";
+      },
+    };
+
+    await expect(
+      submitWrapperTransactionIntent({
+        provider,
+        intent: mainnetApprove,
+        fromAddress: "0x1111111111111111111111111111111111111111",
+        network: {
+          status: "matched",
+          currentChainId: networkConfigs.mainnet.chainId,
+          expectedChainId: networkConfigs.mainnet.chainId,
+          expectedNetwork: "mainnet",
+          detail: "matched",
+        },
+      }),
+    ).rejects.toThrow("Only Sepolia");
+    await expect(
+      submitWrapperTransactionIntent({
+        provider,
+        intent: sepoliaFaucet,
+        fromAddress: "0x1111111111111111111111111111111111111111",
+        network: {
+          status: "mismatch",
+          currentChainId: networkConfigs.mainnet.chainId,
+          expectedChainId: networkConfigs.sepolia.chainId,
+          expectedNetwork: "sepolia",
+          detail: "wrong network",
+        },
+      }),
+    ).rejects.toThrow("must match");
+    await expect(
+      submitWrapperTransactionIntent({
+        provider: null,
+        intent: sepoliaFaucet,
+        fromAddress: "0x1111111111111111111111111111111111111111",
+        network: null,
+      }),
+    ).rejects.toThrow("No injected");
+    await expect(
+      submitWrapperTransactionIntent({
+        provider: {
+          async request() {
+            return 42;
+          },
+        },
+        intent: sepoliaFaucet,
+        fromAddress: "0x1111111111111111111111111111111111111111",
+        network: {
+          status: "matched",
+          currentChainId: networkConfigs.sepolia.chainId,
+          expectedChainId: networkConfigs.sepolia.chainId,
+          expectedNetwork: "sepolia",
+          detail: "matched",
+        },
+      }),
+    ).rejects.toThrow("invalid transaction hash");
   });
 
   it("separates local demo readiness from external submission gates", () => {

@@ -38,7 +38,7 @@ Click `Connect wallet` only when ready to request an account, then click the net
 
 ## 4. Unsigned Transaction Intent Review
 
-Show the prepared transaction boundary panel before signing anything.
+Show the prepared transaction boundary panel before submitting anything.
 
 For a Sepolia pair, point out:
 
@@ -47,13 +47,15 @@ For a Sepolia pair, point out:
 - wrap `wrap(uint256)` targets the wrapper contract
 - unwrap and finalize remain relayer-gated and do not invent calldata before live encrypted handles and proofs exist
 
-For a mainnet pair, show that the faucet intent fails closed as not supported.
+For a mainnet pair, show that the faucet intent fails closed as not supported and the public submit controls stay disabled.
 
 ## 5. Wrap Flow
 
 Show the approval step first, then the wrap step.
 
-Confirm the wrapper address before signing. Use only a small Sepolia test amount.
+Confirm the wrapper address before submitting. Use only a small Sepolia test amount.
+
+Click the explicit `Submit on Sepolia` controls for the faucet, approval, and wrap intents only after the wallet is connected and on Sepolia. Record the returned transaction hashes for the final form.
 
 ## 6. Unwrap Flow
 
