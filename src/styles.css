@@ -330,12 +330,25 @@ dd {
 
 .wallet-facts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.wallet-actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .wallet-connect {
   width: fit-content;
+}
+
+.network-readout {
+  margin: 0;
+  color: #60716c;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 .readiness-item {

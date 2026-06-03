@@ -3,6 +3,7 @@ import { formatTokenAmount, pairIsHealthy, validatePair } from "./wrapperPair";
 import { listWrapperPairs } from "../services/mockRegistry";
 import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
+import { inspectProviderNetwork, switchProviderNetwork } from "../services/providerNetwork";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
@@ -212,6 +213,37 @@ describe("wrapper pair model", () => {
       blockers: [],
     });
     expect(calls).toEqual(["eth_requestAccounts"]);
+  });
+
+  it("inspects and switches wallet networks through explicit provider calls", async () => {
+    const calls: Array<{ method: string; params?: unknown[] }> = [];
+    let chainId = "0x1";
+    const provider: Eip1193Provider = {
+      async request(args) {
+        calls.push(args);
+        if (args.method === "eth_chainId") return chainId;
+        if (args.method === "wallet_switchEthereumChain") {
+          const [params] = args.params ?? [];
+          if (!params || typeof params !== "object" || !("chainId" in params)) throw new Error("missing chain id");
+          chainId = String(params.chainId);
+          return null;
+        }
+        throw new Error(`unexpected method ${args.method}`);
+      },
+    };
+
+    await expect(inspectProviderNetwork(provider, "sepolia")).resolves.toMatchObject({
+      status: "mismatch",
+      currentChainId: 1,
+      expectedChainId: networkConfigs.sepolia.chainId,
+    });
+    await expect(switchProviderNetwork(provider, "sepolia")).resolves.toMatchObject({
+      status: "matched",
+      currentChainId: networkConfigs.sepolia.chainId,
+      expectedNetwork: "sepolia",
+    });
+    expect(calls.map((call) => call.method)).toEqual(["eth_chainId", "wallet_switchEthereumChain", "eth_chainId"]);
+    expect(calls[1].params).toEqual([{ chainId: "0xaa36a7" }]);
   });
 
   it("separates local demo readiness from external submission gates", () => {

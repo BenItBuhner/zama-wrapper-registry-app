@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, DatabaseZap, Droplets, Eye, KeyRound, LockKeyhole, RefreshCw, ShieldCheck, Wallet } from "lucide-react";
+import { CheckCircle2, DatabaseZap, Droplets, Eye, KeyRound, LockKeyhole, Network, RefreshCw, ShieldCheck, Wallet } from "lucide-react";
 import { formatTokenAmount, pairIsHealthy, type SupportedNetwork, type WrapperPair } from "./domain/wrapperPair";
 import { networkConfigs } from "./config/networks";
 import type { Eip1193Provider } from "./services/providerAdapter";
+import { inspectProviderNetwork, switchProviderNetwork, type ProviderNetworkReadiness } from "./services/providerNetwork";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
 import { connectInjectedWallet, inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
@@ -25,6 +26,8 @@ export default function App() {
   const [registryStatus, setRegistryStatus] = useState<string>("loading");
   const [walletReadiness, setWalletReadiness] = useState<WalletReadiness | null>(null);
   const [walletConnecting, setWalletConnecting] = useState(false);
+  const [networkReadiness, setNetworkReadiness] = useState<ProviderNetworkReadiness | null>(null);
+  const [networkSwitching, setNetworkSwitching] = useState(false);
 
   const dataSource = useMemo(() => makeConfiguredRegistryDataSource(), []);
 
@@ -53,6 +56,11 @@ export default function App() {
   const actionPlan = selected ? buildActionPlan(selected) : null;
   const readiness = useMemo(() => buildSubmissionReadiness(dataSource.mode === "chain"), [dataSource.mode]);
 
+  useEffect(() => {
+    if (!selected) return;
+    inspectProviderNetwork(typeof window === "undefined" ? null : window.ethereum, selected.network).then(setNetworkReadiness);
+  }, [selected]);
+
   async function revealBalance(pair: WrapperPair) {
     setDecryptedBalance(await decryptMockBalance(pair));
   }
@@ -61,6 +69,13 @@ export default function App() {
     setWalletConnecting(true);
     setWalletReadiness(await connectInjectedWallet(typeof window === "undefined" ? null : window.ethereum));
     setWalletConnecting(false);
+    if (selected) setNetworkReadiness(await inspectProviderNetwork(typeof window === "undefined" ? null : window.ethereum, selected.network));
+  }
+
+  async function switchNetwork(network: SupportedNetwork) {
+    setNetworkSwitching(true);
+    setNetworkReadiness(await switchProviderNetwork(typeof window === "undefined" ? null : window.ethereum, network));
+    setNetworkSwitching(false);
   }
 
   return (
@@ -190,16 +205,38 @@ export default function App() {
                       label="User decrypt signature"
                       value={walletReadiness?.canPrepareUserDecryptionSignature ? "ready to prepare" : "blocked"}
                     />
+                    <Metric
+                      icon={<Network size={18} />}
+                      label="Network"
+                      value={
+                        networkReadiness?.currentChainId
+                          ? `chain ${networkReadiness.currentChainId}`
+                          : `expects ${networkConfigs[selected.network].chainId}`
+                      }
+                    />
+                    <Metric icon={<ShieldCheck size={18} />} label="Network match" value={networkReadiness?.status ?? "checking"} />
                   </div>
-                  <button
-                    className="secondary-action wallet-connect"
-                    disabled={walletConnecting || walletReadiness?.status === "ready"}
-                    onClick={() => void connectWallet()}
-                    type="button"
-                  >
-                    <Wallet aria-hidden="true" size={17} />
-                    {walletConnecting ? "Connecting" : walletReadiness?.status === "ready" ? "Wallet connected" : "Connect wallet"}
-                  </button>
+                  <div className="wallet-actions">
+                    <button
+                      className="secondary-action wallet-connect"
+                      disabled={walletConnecting || walletReadiness?.status === "ready"}
+                      onClick={() => void connectWallet()}
+                      type="button"
+                    >
+                      <Wallet aria-hidden="true" size={17} />
+                      {walletConnecting ? "Connecting" : walletReadiness?.status === "ready" ? "Wallet connected" : "Connect wallet"}
+                    </button>
+                    <button
+                      className="secondary-action wallet-connect"
+                      disabled={networkSwitching || networkReadiness?.status === "matched"}
+                      onClick={() => void switchNetwork(selected.network)}
+                      type="button"
+                    >
+                      <Network aria-hidden="true" size={17} />
+                      {networkSwitching ? "Switching" : `Switch to ${networkConfigs[selected.network].label}`}
+                    </button>
+                  </div>
+                  <p className="network-readout">{networkReadiness?.detail ?? "Checking wallet network state."}</p>
                 </div>
               </div>
               <div>
