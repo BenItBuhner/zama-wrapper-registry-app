@@ -13,6 +13,8 @@ This workspace is local-only until the external gates are satisfied:
 - final Zama form submission
 - payout wallet/account handling
 
+Current official target: Zama Developer Program Mainnet Season 3 Bounty Track, "Confidential Wrapper Registry App." The form deadline is July 7, 2026 at 23:59 AOE, and the form requires a functioning deployed dApp, codebase, a 3-minute real-person pitch video, and a thread or article published on X.
+
 ## Current Phase
 
 Phase 1 builds a working UI and typed integration boundaries with mocked registry/decryption data so most behavior is testable without credentials.
@@ -57,14 +59,16 @@ This repository is not a final bounty submission yet. Remaining external gates:
 
 - connect a wallet and execute Sepolia-only demo transactions through the explicit submit controls
 - execute the relayer SDK user-decryption flow with a real encrypted handle and EIP-712 signature
-- record a real demo video
-- publish the required article or X thread outside this repository
-- submit the final Zama form and payout details
+- record or obtain the required 3-minute real-person pitch video
+- publish the required X thread or X article outside this repository
+- submit the final Season 3 Zama form and payout details
 
 No wallet private key, real signature, payout account, RPC secret, live transaction proof, or final form submission is included in this handoff. The public GitHub Pages deployment is live and remains credential-free.
 
 ## Public Submission Assets
 
+- Season 3 bounty form: https://forms.zama.org/developer-program-mainnet-season3-bounty-track
+- Season 3 announcement: https://www.zama.org/post/zama-developer-program-mainnet-season-3-composable-privacy-is-the-key
 - Public demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
 - Submission packet: [docs/SUBMISSION-PACKET.md](docs/SUBMISSION-PACKET.md)
 - Demo script: [docs/DEMO-SCRIPT.md](docs/DEMO-SCRIPT.md)
@@ -78,6 +82,8 @@ No wallet private key, real signature, payout account, RPC secret, live transact
 ## References
 
 - Zama protocol app addresses: https://github.com/zama-ai/protocol-apps/blob/main/docs/addresses.md
+- Zama Season 3 bounty form: https://forms.zama.org/developer-program-mainnet-season3-bounty-track
+- Zama Season 3 announcement: https://www.zama.org/post/zama-developer-program-mainnet-season-3-composable-privacy-is-the-key
 - Registry contract guide: https://docs.zama.org/protocol/protocol-apps/registry-contract
 - Confidential wrapper guide: https://docs.zama.org/protocol/protocol-guides/confidential-wrapper
 - User decryption guide: https://docs.zama.org/protocol/relayer-sdk-guides/fhevm-relayer/decryption/user-decryption

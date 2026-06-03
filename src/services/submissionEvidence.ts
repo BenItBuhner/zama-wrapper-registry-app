@@ -23,6 +23,11 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
   return {
     publicLinks: [
       {
+        label: "Season 3 bounty form",
+        href: "https://forms.zama.org/developer-program-mainnet-season3-bounty-track",
+        status: "external-gate",
+      },
+      {
         label: "Public repository",
         href: "https://github.com/BenItBuhner/zama-wrapper-registry-app",
         status: "ready",
@@ -93,16 +98,16 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Final bounty evidence",
         status: "external-gate",
-        detail: "Demo video and article are published; final bounty evidence still needs real Sepolia transaction hashes, live user-decryption output, final form submission, and payout details.",
+        detail: "Credential-free demo assets are published; final bounty evidence still needs real Sepolia transaction hashes, live user-decryption output, real-person pitch/X evidence, final form submission, and payout details.",
       },
     ],
     remainingExternalGates: [
       "Connect a real browser wallet and execute Sepolia-only faucet/approve/wrap demo transactions through the explicit submit controls.",
       "Use the explicit UI signing control with a real browser wallet to collect a live user-decryption EIP-712 signature.",
       "Run live relayer SDK user decryption against a real encrypted balance handle.",
-      "Replace or supplement the credential-free demo video if the bounty reviewer requires live wallet transaction footage.",
-      "Use the published article link or replace it with an X thread if the final form requires X specifically.",
-      "Submit the Zama bounty form with the prepared answers and payout details.",
+      "Record or obtain a real-person 3-minute pitch video; the Season 3 form says AI-generated video or voice will not be considered.",
+      "Publish the required X thread or X article introducing the project.",
+      "Submit the Season 3 Zama bounty form before July 7, 2026 at 23:59 AOE with the prepared answers and payout details.",
     ],
   };
 }

@@ -2,6 +2,8 @@
 
 ## Public Links
 
+- Season 3 bounty form: https://forms.zama.org/developer-program-mainnet-season3-bounty-track
+- Season 3 announcement: https://www.zama.org/post/zama-developer-program-mainnet-season-3-composable-privacy-is-the-key
 - Repository: https://github.com/BenItBuhner/zama-wrapper-registry-app
 - Demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
 - Demo video: https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
@@ -37,9 +39,9 @@ bun run build:pages
 
 Latest GitHub Pages validation:
 
-- Pages workflow `26859741226` passed test, build, artifact upload, and deployment for commit `396b28b63a48e39a99dd1fd528e3cfd5210c41d7`.
+- The latest public Pages workflow passed test, build, artifact upload, and deployment for the current public `main` branch.
 - `https://benitbuhner.github.io/zama-wrapper-registry-app/` returned HTTP 200.
-- Raw source URLs for `src/services/submissionEvidence.ts` and `docs/SUBMISSION-PACKET.md` returned HTTP 200.
+- Raw source URLs for `src/services/submissionEvidence.ts`, `docs/SUBMISSION-PACKET.md`, and `docs/FORM-ANSWERS-DRAFT.md` returned HTTP 200 in the latest publication check.
 
 Transaction-intent coverage:
 
@@ -61,8 +63,8 @@ Evidence-packet coverage:
 - Execute Sepolia-only demo transactions with a real wallet through the explicit submit controls and record the hashes.
 - Wire the relayer SDK user-decryption flow against a real encrypted balance handle.
 - Produce a real EIP-712 signature and relayer user-decryption response from a connected wallet.
-- Replace or supplement the credential-free demo video if the final reviewer requires live wallet transaction footage.
-- Use the published article link, or replace it with an X thread if the final form requires X specifically.
-- Submit the final Zama bounty form with the prepared answers and payout details.
+- Record or obtain the required 3-minute real-person pitch video. The Season 3 form says AI-generated video or voice will not be considered.
+- Publish the required X thread or X article introducing the project. The GitHub article is useful source material but is not itself an X publication.
+- Submit the final Season 3 Zama bounty form before July 7, 2026 at 23:59 AOE with the prepared answers and payout details.
 
 No private key, wallet seed, payout detail, RPC secret, signature, or transaction proof is committed here.

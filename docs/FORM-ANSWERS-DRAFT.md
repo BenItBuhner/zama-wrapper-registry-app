@@ -1,6 +1,12 @@
 # Zama Bounty Form Answers Draft
 
-Use this as the final-form source after the remaining live gates are completed. Do not submit this draft until the wallet demo, video, article/X post, and payout details are available.
+Use this as the final-form source after the remaining live gates are completed. Do not submit this draft until the wallet demo, required real-person video, X article/thread, and payout details are available.
+
+Official target: Zama Developer Program Mainnet Season 3 Bounty Track, "Confidential Wrapper Registry App."
+
+Submission form: https://forms.zama.org/developer-program-mainnet-season3-bounty-track
+
+Deadline: July 7, 2026 at 23:59 AOE.
 
 ## Project Name
 
@@ -44,9 +50,9 @@ git diff --check
 
 Latest verified result:
 
-- Commit: pending latest commit after relayer SDK boundary publication
+- Commit: latest public `main`
 - Test result: `27/27`
-- GitHub Pages workflow: pending latest deployment after relayer SDK boundary publication
+- GitHub Pages workflow: latest public Pages deployment
 - Public demo: HTTP `200`
 - Raw evidence service: HTTP `200` at `src/services/submissionEvidence.ts`
 - Raw submission packet: HTTP `200` at `docs/SUBMISSION-PACKET.md`
@@ -57,9 +63,13 @@ https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-de
 
 Current status: credential-free public demo video generated from the deployed app. It shows registry browsing, transaction intents, live-demo preflight gates, and the evidence packet. Replace or supplement it if the final reviewer requires live wallet transaction footage.
 
+Season 3 form requirement: a 3-minute real-person pitch video. AI-generated video or voice will not be considered. The credential-free screen recording is useful evidence but should not be treated as satisfying the real-person pitch requirement by itself.
+
 ## Article Or X Thread Link
 
 https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md
+
+Season 3 form requirement: a thread or article published on X introducing the project. The GitHub article is the current public article asset, but it should be mirrored or introduced on X before final submission.
 
 ## Transaction Evidence
 
@@ -71,7 +81,7 @@ Pending. The source now includes the live `@zama-fhe/relayer-sdk` init/EIP-712/u
 
 ## Payout Details
 
-Pending. Fill only through the official Zama submission form or user-approved payout flow.
+Pending. Fill only through the official Season 3 Zama submission form or user-approved payout flow.
 
 ## Notes
 

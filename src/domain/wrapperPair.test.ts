@@ -645,6 +645,8 @@ describe("wrapper pair model", () => {
   it("keeps official reference links attached to the handoff", () => {
     expect(zamaReferenceLinks.map((link) => link.href)).toEqual(
       expect.arrayContaining([
+        expect.stringContaining("developer-program-mainnet-season3-bounty-track"),
+        expect.stringContaining("developer-program-mainnet-season-3"),
         expect.stringContaining("zama-ai/protocol-apps"),
         expect.stringContaining("protocol-guides/confidential-wrapper"),
         expect.stringContaining("protocol-apps/registry-contract"),
@@ -662,6 +664,7 @@ describe("wrapper pair model", () => {
   it("builds a final-form evidence packet without secrets or signatures", () => {
     const packet = buildSubmissionEvidencePacket();
     expect(packet.publicLinks.map((link) => link.label)).toEqual([
+      "Season 3 bounty form",
       "Public repository",
       "Public demo",
       "Submission packet",
@@ -683,8 +686,9 @@ describe("wrapper pair model", () => {
     ]);
     expect(packet.remainingExternalGates).toEqual(
       expect.arrayContaining([
-        "Replace or supplement the credential-free demo video if the bounty reviewer requires live wallet transaction footage.",
-        "Submit the Zama bounty form with the prepared answers and payout details.",
+        "Record or obtain a real-person 3-minute pitch video; the Season 3 form says AI-generated video or voice will not be considered.",
+        "Publish the required X thread or X article introducing the project.",
+        "Submit the Season 3 Zama bounty form before July 7, 2026 at 23:59 AOE with the prepared answers and payout details.",
       ]),
     );
     expect(JSON.stringify(packet).toLowerCase()).not.toContain("private key");

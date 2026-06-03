@@ -13,6 +13,14 @@ export interface ReferenceLink {
 
 export const zamaReferenceLinks: ReferenceLink[] = [
   {
+    label: "Season 3 bounty form",
+    href: "https://forms.zama.org/developer-program-mainnet-season3-bounty-track",
+  },
+  {
+    label: "Season 3 announcement",
+    href: "https://www.zama.org/post/zama-developer-program-mainnet-season-3-composable-privacy-is-the-key",
+  },
+  {
     label: "Zama protocol apps addresses",
     href: "https://github.com/zama-ai/protocol-apps/blob/main/docs/addresses.md",
   },
@@ -76,7 +84,8 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
     {
       label: "Submission assets",
       status: "external-gate",
-      detail: "Public demo, packet, demo script, article, demo video, and form-answer draft are ready; still requires live wallet/user-decryption evidence and form submission.",
+      detail:
+        "Public demo, packet, demo script, article, credential-free demo video, and form-answer draft are ready; the live Season 3 form still requires real wallet/user-decryption evidence, real-person pitch/X evidence, and payout/form submission before July 7, 2026.",
     },
   ];
 }
