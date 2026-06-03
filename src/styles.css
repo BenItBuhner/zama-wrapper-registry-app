@@ -382,6 +382,11 @@ dd {
   gap: 10px;
 }
 
+.signing-shell {
+  display: grid;
+  gap: 10px;
+}
+
 .wallet-facts {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -415,6 +420,18 @@ dd {
   color: #60716c;
   font-size: 13px;
   line-height: 1.45;
+}
+
+.signing-summary {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.signing-summary div {
+  border: 1px solid #e2e9e4;
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .readiness-item {

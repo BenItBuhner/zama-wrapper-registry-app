@@ -71,7 +71,7 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
     {
       label: "Balance decryption",
       status: "external-gate",
-      detail: "Public integration plan is drafted; live completion requires relayer SDK plumbing and EIP-712 signature handling.",
+      detail: "Typed-data request preparation and explicit wallet-signature controls are wired; live completion requires a real signature, encrypted handle, and relayer SDK execution.",
     },
     {
       label: "Submission assets",

@@ -14,13 +14,18 @@ import {
 } from "lucide-react";
 import { formatTokenAmount, pairIsHealthy, type SupportedNetwork, type WrapperPair } from "./domain/wrapperPair";
 import { networkConfigs } from "./config/networks";
-import type { Eip1193Provider } from "./services/providerAdapter";
+import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "./services/providerAdapter";
 import { buildLiveDemoPreflight } from "./services/liveDemoPreflight";
 import { inspectProviderNetwork, switchProviderNetwork, type ProviderNetworkReadiness } from "./services/providerNetwork";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionEvidencePacket } from "./services/submissionEvidence";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
 import { buildWrapperTransactionIntents } from "./services/transactionIntents";
+import {
+  buildUserDecryptionSigningSession,
+  signUserDecryptionSigningSession,
+  type UserDecryptionSigningSession,
+} from "./services/userDecryptionSigningSession";
 import { connectInjectedWallet, inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
 import { buildActionPlan, decryptMockBalance } from "./services/wrapperActions";
 import "./styles.css";
@@ -43,6 +48,9 @@ export default function App() {
   const [walletConnecting, setWalletConnecting] = useState(false);
   const [networkReadiness, setNetworkReadiness] = useState<ProviderNetworkReadiness | null>(null);
   const [networkSwitching, setNetworkSwitching] = useState(false);
+  const [signingSession, setSigningSession] = useState<UserDecryptionSigningSession | null>(null);
+  const [signatureStatus, setSignatureStatus] = useState<string>("No user-decryption signature requested.");
+  const [signingBusy, setSigningBusy] = useState(false);
 
   const dataSource = useMemo(() => makeConfiguredRegistryDataSource(), []);
 
@@ -102,6 +110,35 @@ export default function App() {
     setNetworkSwitching(false);
   }
 
+  async function prepareUserDecryptionSignature(pair: WrapperPair) {
+    setSignatureStatus("Preparing user-decryption typed-data request.");
+    try {
+      const wallet = await readInjectedProvider(typeof window === "undefined" ? null : window.ethereum);
+      const session = buildUserDecryptionSigningSession(pair, wallet);
+      setSigningSession(session);
+      setSignatureStatus(session.detail);
+    } catch (error: unknown) {
+      setSigningSession(null);
+      setSignatureStatus(error instanceof Error ? error.message : "Failed to prepare user-decryption signing request.");
+    }
+  }
+
+  async function requestUserDecryptionSignature(pair: WrapperPair) {
+    setSigningBusy(true);
+    setSignatureStatus("Requesting typed-data signature from the connected wallet.");
+    try {
+      const wallet = await connectInjectedProvider(typeof window === "undefined" ? null : window.ethereum);
+      const session = buildUserDecryptionSigningSession(pair, wallet);
+      setSigningSession(session);
+      const signature = await signUserDecryptionSigningSession(wallet, session);
+      setSignatureStatus(`Wallet returned typed-data signature ${signature.slice(0, 18)}...`);
+    } catch (error: unknown) {
+      setSignatureStatus(error instanceof Error ? error.message : "Wallet signature request failed.");
+    } finally {
+      setSigningBusy(false);
+    }
+  }
+
   return (
     <main className="app-shell">
       <section className="topbar">
@@ -137,6 +174,8 @@ export default function App() {
               onClick={() => {
                 setSelectedId(pair.id);
                 setDecryptedBalance(null);
+                setSigningSession(null);
+                setSignatureStatus("No user-decryption signature requested.");
               }}
               type="button"
             >
@@ -321,6 +360,54 @@ export default function App() {
                     </button>
                   </div>
                   <p className="network-readout">{networkReadiness?.detail ?? "Checking wallet network state."}</p>
+                </div>
+              </div>
+              <div>
+                <h3>User-decryption signing</h3>
+                <div className="signing-shell">
+                  <div className={`readiness-item ${signingSession?.status === "ready" ? "ready" : "external-gate"}`}>
+                    <span>{signingSession?.status ?? "not-prepared"}</span>
+                    <strong>EIP-712 request</strong>
+                    <p>{signingSession?.detail ?? "Prepare the relayer user-decryption typed-data request after connecting a wallet."}</p>
+                  </div>
+                  <div className="wallet-actions">
+                    <button className="secondary-action wallet-connect" onClick={() => void prepareUserDecryptionSignature(selected)} type="button">
+                      <ClipboardList aria-hidden="true" size={17} />
+                      Prepare request
+                    </button>
+                    <button
+                      className="secondary-action wallet-connect"
+                      disabled={signingBusy}
+                      onClick={() => void requestUserDecryptionSignature(selected)}
+                      type="button"
+                    >
+                      <KeyRound aria-hidden="true" size={17} />
+                      {signingBusy ? "Requesting" : "Request signature"}
+                    </button>
+                  </div>
+                  {signingSession?.draftSummary ? (
+                    <dl className="signing-summary">
+                      <div>
+                        <dt>Signer</dt>
+                        <dd>{signingSession.draftSummary.signerAddress}</dd>
+                      </div>
+                      <div>
+                        <dt>Contracts</dt>
+                        <dd>{signingSession.draftSummary.contractAddresses.join(", ")}</dd>
+                      </div>
+                      <div>
+                        <dt>Batch</dt>
+                        <dd>
+                          {signingSession.draftSummary.totalBitLength} bits for {signingSession.draftSummary.durationDays} days
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Blockers</dt>
+                        <dd>{signingSession.blockers.length ? signingSession.blockers.join(", ") : "none"}</dd>
+                      </div>
+                    </dl>
+                  ) : null}
+                  <p className="network-readout">{signatureStatus}</p>
                 </div>
               </div>
               <div>

@@ -73,7 +73,7 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Wallet boundary",
         status: "ready",
-        detail: "The app separates passive wallet inspection from explicit user-clicked connection, chain switching, and signing boundaries.",
+        detail: "The app separates passive wallet inspection from explicit user-clicked connection, chain switching, typed-data request preparation, and signing prompts.",
       },
       {
         label: "Unsigned transaction review",
@@ -83,7 +83,7 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Relayer user-decryption boundary",
         status: "local-validation",
-        detail: "Request and signing payload shapes are typed and tested; live relayer SDK execution still needs a real encrypted handle and wallet signature.",
+        detail: "Request and signing payload shapes are typed, tested, and wired into explicit UI controls; live relayer SDK execution still needs a real encrypted handle and wallet signature.",
       },
       {
         label: "Final bounty evidence",
@@ -93,6 +93,7 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
     ],
     remainingExternalGates: [
       "Connect a real browser wallet and execute Sepolia-only faucet/approve/wrap demo transactions.",
+      "Use the explicit UI signing control with a real browser wallet to collect a live user-decryption EIP-712 signature.",
       "Run live relayer SDK user decryption against a real encrypted balance handle.",
       "Replace or supplement the credential-free demo video if the bounty reviewer requires live wallet transaction footage.",
       "Use the published article link or replace it with an X thread if the final form requires X specifically.",

@@ -11,6 +11,7 @@ import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
 import { buildSubmissionEvidencePacket } from "../services/submissionEvidence";
+import { buildUserDecryptionSigningSession, signUserDecryptionSigningSession } from "../services/userDecryptionSigningSession";
 import { connectInjectedWallet, inspectInjectedWallet } from "../services/walletReadiness";
 import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
@@ -254,6 +255,41 @@ describe("wrapper pair model", () => {
       canSign: false,
       blockers: ["wallet:address_mismatch"],
     });
+  });
+
+  it("summarizes user-decryption signing sessions for the browser UI", async () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+
+    const blocked = buildUserDecryptionSigningSession(sepoliaPair!, { address: null });
+    expect(blocked).toMatchObject({
+      status: "blocked",
+      draftSummary: null,
+      blockers: ["wallet:not_connected"],
+    });
+
+    const ready = buildUserDecryptionSigningSession(sepoliaPair!, {
+      address: "0x1111111111111111111111111111111111111111",
+      signTypedData: async (payload) => `0x${payload.message.contractAddresses.length}${payload.message.durationDays}`,
+    });
+    expect(ready).toMatchObject({
+      status: "ready",
+      blockers: [],
+      draftSummary: {
+        signerAddress: "0x1111111111111111111111111111111111111111",
+        totalBitLength: 64,
+        durationDays: "10",
+      },
+    });
+    await expect(
+      signUserDecryptionSigningSession(
+        {
+          address: "0x1111111111111111111111111111111111111111",
+          signTypedData: async (payload) => `0x${payload.message.contractAddresses.length}${payload.message.durationDays}`,
+        },
+        ready,
+      ),
+    ).resolves.toBe("0x110");
   });
 
   it("adapts injected providers without touching real browser wallets", async () => {
