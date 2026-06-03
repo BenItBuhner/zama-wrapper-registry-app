@@ -1,11 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, DatabaseZap, Droplets, Eye, KeyRound, LockKeyhole, Network, RefreshCw, ShieldCheck, Wallet } from "lucide-react";
+import {
+  CheckCircle2,
+  ClipboardList,
+  DatabaseZap,
+  Droplets,
+  Eye,
+  KeyRound,
+  LockKeyhole,
+  Network,
+  RefreshCw,
+  ShieldCheck,
+  Wallet,
+} from "lucide-react";
 import { formatTokenAmount, pairIsHealthy, type SupportedNetwork, type WrapperPair } from "./domain/wrapperPair";
 import { networkConfigs } from "./config/networks";
 import type { Eip1193Provider } from "./services/providerAdapter";
 import { buildLiveDemoPreflight } from "./services/liveDemoPreflight";
 import { inspectProviderNetwork, switchProviderNetwork, type ProviderNetworkReadiness } from "./services/providerNetwork";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
+import { buildSubmissionEvidencePacket } from "./services/submissionEvidence";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
 import { buildWrapperTransactionIntents } from "./services/transactionIntents";
 import { connectInjectedWallet, inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
@@ -65,6 +78,7 @@ export default function App() {
     [networkReadiness, selected, transactionIntents, walletReadiness],
   );
   const readiness = useMemo(() => buildSubmissionReadiness(dataSource.mode === "chain"), [dataSource.mode]);
+  const evidencePacket = useMemo(() => buildSubmissionEvidencePacket(), []);
 
   useEffect(() => {
     if (!selected) return;
@@ -319,6 +333,37 @@ export default function App() {
                       <p>{item.detail}</p>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div>
+                <h3>Evidence packet</h3>
+                <div className="evidence-shell">
+                  <div className="preflight-summary">
+                    <ClipboardList aria-hidden="true" size={18} />
+                    {evidencePacket.publicLinks.filter((link) => link.status === "ready").length} public assets ready
+                  </div>
+                  <div className="evidence-links">
+                    {evidencePacket.publicLinks.map((link) => (
+                      <a href={link.href} key={link.href} rel="noreferrer" target="_blank">
+                        <span>{link.status}</span>
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                  <div className="command-list" aria-label="Validation commands">
+                    {evidencePacket.validationCommands.map((command) => (
+                      <code key={command}>{command}</code>
+                    ))}
+                  </div>
+                  <div className="readiness-grid">
+                    {evidencePacket.checklist.map((item) => (
+                      <div className={`readiness-item ${item.status}`} key={item.label}>
+                        <span>{item.status}</span>
+                        <strong>{item.label}</strong>
+                        <p>{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               <div>

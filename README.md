@@ -30,6 +30,7 @@ Current implemented surface:
 - unsigned transaction-intent review for Sepolia faucet, ERC-20 approval, wrapper wrap, relayer-gated unwrap, and finalize steps
 - EIP-712 user-decryption signing payload preparation behind a wallet adapter boundary
 - submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
+- final-form evidence packet with public links, validation commands, remaining external gates, and no secret/signature material
 - public submission packet, demo script, article draft, and relayer user-decryption implementation plan
 
 ```bash

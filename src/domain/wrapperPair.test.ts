@@ -10,6 +10,7 @@ import { buildDemoUnderlyingAmount, buildWrapperTransactionIntents } from "../se
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
+import { buildSubmissionEvidencePacket } from "../services/submissionEvidence";
 import { connectInjectedWallet, inspectInjectedWallet } from "../services/walletReadiness";
 import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
@@ -383,5 +384,33 @@ describe("wrapper pair model", () => {
         expect.stringContaining("RELAYER-USER-DECRYPTION-PLAN.md"),
       ]),
     );
+  });
+
+  it("builds a final-form evidence packet without secrets or signatures", () => {
+    const packet = buildSubmissionEvidencePacket();
+    expect(packet.publicLinks.map((link) => link.label)).toEqual([
+      "Public repository",
+      "Public demo",
+      "Submission packet",
+      "Demo script",
+      "Article draft",
+      "Relayer user-decryption plan",
+    ]);
+    expect(packet.publicLinks.every((link) => link.href.startsWith("https://"))).toBe(true);
+    expect(packet.validationCommands).toEqual(["bun run test", "bun run build", "bun run build:pages"]);
+    expect(packet.checklist.map((item) => item.status)).toEqual([
+      "ready",
+      "ready",
+      "ready",
+      "local-validation",
+      "external-gate",
+    ]);
+    expect(packet.remainingExternalGates).toEqual(
+      expect.arrayContaining([
+        "Record and publish the demo video.",
+        "Submit the Zama bounty form with payout details.",
+      ]),
+    );
+    expect(JSON.stringify(packet).toLowerCase()).not.toContain("private key");
   });
 });

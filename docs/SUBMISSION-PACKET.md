@@ -18,6 +18,7 @@
 - Checks the selected wrapper network through `eth_chainId` and offers a user-clicked `wallet_switchEthereumChain` path for Sepolia/mainnet alignment.
 - Prepares unsigned transaction intents for Sepolia faucet, ERC-20 approval, wrapper wrap, relayer-gated unwrap request, and unwrap finalization review.
 - Prepares typed user-decryption signing payloads behind an explicit adapter boundary without forcing a real signature in the public demo.
+- Packages a final-form evidence checklist with public links, validation commands, completed local boundaries, and remaining external gates.
 - Separates local-only proof from external gates so the app does not imply a wallet transaction happened before it did.
 
 ## Validation Evidence
@@ -43,6 +44,12 @@ Unsigned transaction-intent coverage:
 - Wrap intent builds wrapper `wrap(uint256)` calldata for the same demo amount.
 - Mainnet faucet intent fails closed as not supported.
 - Unwrap and finalize intents record target contract, method shape, and required live relayer inputs while keeping calldata null until encrypted handles/proofs exist.
+
+Evidence-packet coverage:
+
+- Public repository, GitHub Pages demo, submission packet, demo script, article draft, and relayer plan links are visible in the app.
+- Required local validation commands are visible in the app: `bun run test`, `bun run build`, and `bun run build:pages`.
+- Remaining external gates are explicitly separated from local validation so the app does not claim wallet signatures, transaction proof, video publication, article/X publication, or form submission before they happen.
 
 ## Remaining External Gates
 

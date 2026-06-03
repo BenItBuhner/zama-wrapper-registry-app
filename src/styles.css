@@ -480,6 +480,50 @@ dd {
   font-weight: 800;
 }
 
+.evidence-shell {
+  display: grid;
+  gap: 12px;
+}
+
+.evidence-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.evidence-links a {
+  border: 1px solid #e2e9e4;
+  border-radius: 8px;
+  color: #17201d;
+  padding: 10px;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.evidence-links span {
+  display: block;
+  width: fit-content;
+  margin-bottom: 7px;
+  border-radius: 6px;
+  background: #e7f5ec;
+  color: #137044;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+.command-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.command-list code {
+  border: 1px solid #d8e2dd;
+  border-radius: 8px;
+  background: #f5f8f6;
+  padding: 8px 10px;
+}
+
 @media (max-width: 780px) {
   .app-shell {
     padding: 18px;
@@ -494,7 +538,8 @@ dd {
   .metric-grid,
   .action-plan,
   .readiness-grid,
-  .wallet-facts {
+  .wallet-facts,
+  .evidence-links {
     grid-template-columns: 1fr;
   }
 }
