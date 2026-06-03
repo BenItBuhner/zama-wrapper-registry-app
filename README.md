@@ -25,11 +25,13 @@ Current implemented surface:
 - registry validity checks using `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress`
 - explicit wallet/relayer action plans for faucet, approve, wrap, unwrap, finalize, and user decryption
 - submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
+- public submission packet, demo script, article draft, and relayer user-decryption implementation plan
 
 ```bash
 bun install
 bun run test
 bun run build
+bun run build:pages
 ```
 
 ## Integration Notes
@@ -43,17 +45,25 @@ bun run build
 
 This repository is not a final bounty submission yet. Remaining external gates:
 
-- deploy the app to a durable public URL
 - connect a wallet and execute Sepolia-only demo transactions
 - wire the relayer SDK user-decryption flow with EIP-712 signatures
 - record a real demo video
-- publish the required article or X thread
+- publish the required article or X thread outside this repository
 - submit the final Zama form and payout details
 
 No wallet private key, signature, payout account, RPC secret, public deployment, or final form submission is included in this local handoff.
+
+## Public Submission Assets
+
+- Public demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
+- Submission packet: [docs/SUBMISSION-PACKET.md](docs/SUBMISSION-PACKET.md)
+- Demo script: [docs/DEMO-SCRIPT.md](docs/DEMO-SCRIPT.md)
+- Article draft: [docs/ARTICLE-DRAFT.md](docs/ARTICLE-DRAFT.md)
+- Relayer user-decryption plan: [docs/RELAYER-USER-DECRYPTION-PLAN.md](docs/RELAYER-USER-DECRYPTION-PLAN.md)
 
 ## References
 
 - Zama protocol app addresses: https://github.com/zama-ai/protocol-apps/blob/main/docs/addresses.md
 - Registry contract guide: https://docs.zama.org/protocol/protocol-apps/registry-contract
 - Confidential wrapper guide: https://docs.zama.org/protocol/protocol-guides/confidential-wrapper
+- User decryption guide: https://docs.zama.org/protocol/relayer-sdk-guides/fhevm-relayer/decryption/user-decryption

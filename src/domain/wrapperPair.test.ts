@@ -64,6 +64,11 @@ describe("wrapper pair model", () => {
         expect.stringContaining("zama-ai/protocol-apps"),
         expect.stringContaining("protocol-guides/confidential-wrapper"),
         expect.stringContaining("protocol-apps/registry-contract"),
+        expect.stringContaining("relayer-sdk-guides/fhevm-relayer/decryption/user-decryption"),
+        expect.stringContaining("SUBMISSION-PACKET.md"),
+        expect.stringContaining("DEMO-SCRIPT.md"),
+        expect.stringContaining("ARTICLE-DRAFT.md"),
+        expect.stringContaining("RELAYER-USER-DECRYPTION-PLAN.md"),
       ]),
     );
   });

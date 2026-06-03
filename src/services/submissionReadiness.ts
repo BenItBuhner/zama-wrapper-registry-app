@@ -24,6 +24,26 @@ export const zamaReferenceLinks: ReferenceLink[] = [
     label: "Registry contract guide",
     href: "https://docs.zama.org/protocol/protocol-apps/registry-contract",
   },
+  {
+    label: "User decryption guide",
+    href: "https://docs.zama.org/protocol/relayer-sdk-guides/fhevm-relayer/decryption/user-decryption",
+  },
+  {
+    label: "Submission packet",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/SUBMISSION-PACKET.md",
+  },
+  {
+    label: "Demo script",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/DEMO-SCRIPT.md",
+  },
+  {
+    label: "Article draft",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE-DRAFT.md",
+  },
+  {
+    label: "Relayer user-decryption plan",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/RELAYER-USER-DECRYPTION-PLAN.md",
+  },
 ];
 
 export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] {
@@ -43,12 +63,12 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
     {
       label: "Balance decryption",
       status: "external-gate",
-      detail: "Requires relayer SDK user-decryption plumbing and EIP-712 signature handling.",
+      detail: "Public integration plan is drafted; live completion requires relayer SDK plumbing and EIP-712 signature handling.",
     },
     {
       label: "Submission assets",
       status: "external-gate",
-      detail: "Requires public deployment, demo video, article or X thread, and final Zama form submission.",
+      detail: "Public demo, packet, demo script, and article draft are ready; still requires final video, external article/X publication, and form submission.",
     },
   ];
 }
