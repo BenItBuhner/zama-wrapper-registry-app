@@ -5,6 +5,7 @@ import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
 import { inspectProviderNetwork, switchProviderNetwork } from "../services/providerNetwork";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
+import { buildDemoUnderlyingAmount, buildWrapperTransactionIntents } from "../services/transactionIntents";
 import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
 import { connectInjectedProvider, readInjectedProvider, type Eip1193Provider } from "../services/providerAdapter";
 import { prepareUserDecryptionSigningRequest, signUserDecryptionRequest } from "../services/signingAdapter";
@@ -52,6 +53,58 @@ describe("wrapper pair model", () => {
     expect(plan.faucet[0].status).toBe("requires-wallet");
     expect(plan.wrap.map((step) => step.status)).toEqual(["requires-wallet", "requires-wallet"]);
     expect(plan.unwrap.map((step) => step.status)).toEqual(["requires-relayer", "requires-relayer"]);
+  });
+
+  it("prepares unsigned wrapper transaction intents without provider calls", () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.id === "sepolia-usdc-cusdcmock");
+    expect(sepoliaPair).toBeDefined();
+    const intents = buildWrapperTransactionIntents(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+    const approve = intents.find((intent) => intent.kind === "approve");
+    const wrap = intents.find((intent) => intent.kind === "wrap");
+    const faucet = intents.find((intent) => intent.kind === "faucet");
+
+    expect(buildDemoUnderlyingAmount(sepoliaPair!)).toBe(1_000_000n);
+    expect(faucet).toMatchObject({
+      status: "ready-to-build",
+      targetAddress: sepoliaPair!.underlying.address,
+      method: "mint(address,uint256)",
+      chainId: networkConfigs.sepolia.chainId,
+    });
+    expect(approve).toMatchObject({
+      status: "ready-to-build",
+      targetAddress: sepoliaPair!.underlying.address,
+      method: "approve(address,uint256)",
+    });
+    expect(wrap).toMatchObject({
+      status: "ready-to-build",
+      targetAddress: sepoliaPair!.wrapperAddress,
+      method: "wrap(uint256)",
+    });
+    expect(approve?.data?.startsWith("0x095ea7b3")).toBe(true);
+    expect(wrap?.data?.startsWith("0x")).toBe(true);
+  });
+
+  it("fails closed for faucet and relayer-dependent transaction intents", () => {
+    const mainnetPair = seededOfficialPairs.find((pair) => pair.id === "mainnet-usdc-cusdc");
+    expect(mainnetPair).toBeDefined();
+    const intents = buildWrapperTransactionIntents(mainnetPair!, null);
+    const faucet = intents.find((intent) => intent.kind === "faucet");
+    const unwrap = intents.find((intent) => intent.kind === "unwrap");
+    const finalize = intents.find((intent) => intent.kind === "finalize-unwrap");
+
+    expect(faucet).toMatchObject({
+      status: "not-supported",
+      targetAddress: null,
+      data: null,
+    });
+    expect(unwrap).toMatchObject({
+      status: "requires-relayer",
+      data: null,
+    });
+    expect(finalize).toMatchObject({
+      status: "requires-relayer",
+      data: null,
+    });
   });
 
   it("drafts relayer user-decryption requests without signing", () => {

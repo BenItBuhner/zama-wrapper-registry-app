@@ -6,6 +6,7 @@ import type { Eip1193Provider } from "./services/providerAdapter";
 import { inspectProviderNetwork, switchProviderNetwork, type ProviderNetworkReadiness } from "./services/providerNetwork";
 import { makeConfiguredRegistryDataSource } from "./services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "./services/submissionReadiness";
+import { buildWrapperTransactionIntents } from "./services/transactionIntents";
 import { connectInjectedWallet, inspectInjectedWallet, type WalletReadiness } from "./services/walletReadiness";
 import { buildActionPlan, decryptMockBalance } from "./services/wrapperActions";
 import "./styles.css";
@@ -54,6 +55,10 @@ export default function App() {
   );
   const selected = pairs.find((pair) => pair.id === selectedId) ?? visiblePairs[0] ?? null;
   const actionPlan = selected ? buildActionPlan(selected) : null;
+  const transactionIntents = useMemo(
+    () => (selected ? buildWrapperTransactionIntents(selected, walletReadiness?.address ?? null) : []),
+    [selected, walletReadiness?.address],
+  );
   const readiness = useMemo(() => buildSubmissionReadiness(dataSource.mode === "chain"), [dataSource.mode]);
 
   useEffect(() => {
@@ -188,6 +193,46 @@ export default function App() {
                 ))}
               </section>
             ) : null}
+
+            <section className="transaction-intents" aria-label="Unsigned transaction intents">
+              <div>
+                <p className="eyebrow">Unsigned intents</p>
+                <h3>Prepared transaction boundary</h3>
+              </div>
+              {transactionIntents.map((intent) => (
+                <article className="transaction-intent" key={intent.kind}>
+                  <div className="transaction-intent-header">
+                    <strong>{intent.label}</strong>
+                    <span>{intent.status}</span>
+                  </div>
+                  <dl>
+                    <div>
+                      <dt>Target</dt>
+                      <dd>{intent.targetAddress ?? "not available"}</dd>
+                    </div>
+                    <div>
+                      <dt>Method</dt>
+                      <dd>{intent.method ?? "not available"}</dd>
+                    </div>
+                    <div>
+                      <dt>Network</dt>
+                      <dd>
+                        {intent.networkLabel} ({intent.chainId})
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Amount</dt>
+                      <dd>{intent.amountLabel ?? "not available"}</dd>
+                    </div>
+                    <div>
+                      <dt>Call data</dt>
+                      <dd>{intent.data ?? "requires live relayer data"}</dd>
+                    </div>
+                  </dl>
+                  <p>{intent.note}</p>
+                </article>
+              ))}
+            </section>
 
             <section className="readiness-panel" aria-label="Submission readiness">
               <div>

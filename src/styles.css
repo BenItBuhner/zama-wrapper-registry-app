@@ -304,6 +304,60 @@ dd {
   font-weight: 800;
 }
 
+.transaction-intents {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  border-top: 1px solid #eef1ef;
+  padding-top: 18px;
+}
+
+.transaction-intents h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.transaction-intent {
+  border: 1px solid #e2e9e4;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.transaction-intent-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.transaction-intent-header span {
+  flex: 0 0 auto;
+  border-radius: 6px;
+  background: #eaf1ff;
+  color: #2959a3;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.transaction-intent dl {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.transaction-intent dl div {
+  border-top: 1px solid #eef1ef;
+  padding-top: 8px;
+}
+
+.transaction-intent p {
+  margin: 0;
+  color: #60716c;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .readiness-panel {
   display: grid;
   gap: 18px;
