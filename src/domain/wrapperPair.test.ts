@@ -380,7 +380,8 @@ describe("wrapper pair model", () => {
         expect.stringContaining("relayer-sdk-guides/fhevm-relayer/decryption/user-decryption"),
         expect.stringContaining("SUBMISSION-PACKET.md"),
         expect.stringContaining("DEMO-SCRIPT.md"),
-        expect.stringContaining("ARTICLE-DRAFT.md"),
+        expect.stringContaining("ARTICLE.md"),
+        expect.stringContaining("zama-wrapper-registry-demo.webm"),
         expect.stringContaining("RELAYER-USER-DECRYPTION-PLAN.md"),
         expect.stringContaining("FORM-ANSWERS-DRAFT.md"),
       ]),
@@ -394,7 +395,8 @@ describe("wrapper pair model", () => {
       "Public demo",
       "Submission packet",
       "Demo script",
-      "Article draft",
+      "Published article",
+      "Demo video",
       "Relayer user-decryption plan",
       "Form answers draft",
     ]);
@@ -409,7 +411,7 @@ describe("wrapper pair model", () => {
     ]);
     expect(packet.remainingExternalGates).toEqual(
       expect.arrayContaining([
-        "Record and publish the demo video.",
+        "Replace or supplement the credential-free demo video if the bounty reviewer requires live wallet transaction footage.",
         "Submit the Zama bounty form with the prepared answers and payout details.",
       ]),
     );

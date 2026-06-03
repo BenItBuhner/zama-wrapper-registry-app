@@ -4,6 +4,8 @@
 
 - Repository: https://github.com/BenItBuhner/zama-wrapper-registry-app
 - Demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
+- Demo video: https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
+- Published article: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md
 - GitHub Pages workflow: https://github.com/BenItBuhner/zama-wrapper-registry-app/actions/workflows/pages.yml
 - Form answers draft: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/FORM-ANSWERS-DRAFT.md
 
@@ -48,7 +50,7 @@ Unsigned transaction-intent coverage:
 
 Evidence-packet coverage:
 
-- Public repository, GitHub Pages demo, submission packet, demo script, article draft, relayer plan, and form-answer draft links are visible in the app.
+- Public repository, GitHub Pages demo, demo video, published article, submission packet, demo script, relayer plan, and form-answer draft links are visible in the app.
 - Required local validation commands are visible in the app: `bun run test`, `bun run build`, and `bun run build:pages`.
 - Remaining external gates are explicitly separated from local validation so the app does not claim wallet signatures, transaction proof, video publication, article/X publication, or form submission before they happen.
 
@@ -57,8 +59,8 @@ Evidence-packet coverage:
 - Execute Sepolia-only demo transactions with a real wallet.
 - Wire the relayer SDK user-decryption flow against a real encrypted balance handle.
 - Produce a real EIP-712 signature and relayer user-decryption response from a connected wallet.
-- Record a real demo video after the wallet and decryption path are exercised.
-- Publish the final article or X thread.
+- Replace or supplement the credential-free demo video if the final reviewer requires live wallet transaction footage.
+- Use the published article link, or replace it with an X thread if the final form requires X specifically.
 - Submit the final Zama bounty form with the prepared answers and payout details.
 
 No private key, wallet seed, payout detail, RPC secret, signature, or transaction proof is committed here.

@@ -53,11 +53,13 @@ Latest verified result:
 
 ## Demo Video Link
 
-Pending. Record after live Sepolia wallet transactions and user-decryption output are available.
+https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
+
+Current status: credential-free public demo video generated from the deployed app. It shows registry browsing, unsigned transaction intents, live-demo preflight gates, and the evidence packet. Replace or supplement it if the final reviewer requires live wallet transaction footage.
 
 ## Article Or X Thread Link
 
-Pending. Publish from `docs/ARTICLE-DRAFT.md` after the live demo is complete.
+https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md
 
 ## Transaction Evidence
 

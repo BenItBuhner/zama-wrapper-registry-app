@@ -43,8 +43,13 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
         status: "ready",
       },
       {
-        label: "Article draft",
-        href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE-DRAFT.md",
+        label: "Published article",
+        href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md",
+        status: "ready",
+      },
+      {
+        label: "Demo video",
+        href: "https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm",
         status: "ready",
       },
       {
@@ -83,14 +88,14 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Final bounty evidence",
         status: "external-gate",
-        detail: "Needs real Sepolia demo transactions, live user-decryption output, a recorded video, article/X publication, and final form submission.",
+        detail: "Demo video and article are published; final bounty evidence still needs real Sepolia transactions, live user-decryption output, final form submission, and payout details.",
       },
     ],
     remainingExternalGates: [
       "Connect a real browser wallet and execute Sepolia-only faucet/approve/wrap demo transactions.",
       "Run live relayer SDK user decryption against a real encrypted balance handle.",
-      "Record and publish the demo video.",
-      "Publish the article or X thread from the prepared draft.",
+      "Replace or supplement the credential-free demo video if the bounty reviewer requires live wallet transaction footage.",
+      "Use the published article link or replace it with an X thread if the final form requires X specifically.",
       "Submit the Zama bounty form with the prepared answers and payout details.",
     ],
   };

@@ -37,8 +37,12 @@ export const zamaReferenceLinks: ReferenceLink[] = [
     href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/DEMO-SCRIPT.md",
   },
   {
-    label: "Article draft",
-    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE-DRAFT.md",
+    label: "Published article",
+    href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/ARTICLE.md",
+  },
+  {
+    label: "Demo video",
+    href: "https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm",
   },
   {
     label: "Relayer user-decryption plan",
@@ -72,7 +76,7 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
     {
       label: "Submission assets",
       status: "external-gate",
-      detail: "Public demo, packet, demo script, article draft, and form-answer draft are ready; still requires final video, external article/X publication, and form submission.",
+      detail: "Public demo, packet, demo script, article, demo video, and form-answer draft are ready; still requires live wallet/user-decryption evidence and form submission.",
     },
   ];
 }

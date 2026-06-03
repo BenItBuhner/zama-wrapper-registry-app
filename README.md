@@ -32,6 +32,7 @@ Current implemented surface:
 - submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
 - final-form evidence packet with public links, validation commands, remaining external gates, and no secret/signature material
 - public submission packet, demo script, article draft, form-answer draft, and relayer user-decryption implementation plan
+- credential-free public demo video generated from the deployed app
 
 ```bash
 bun install
@@ -65,6 +66,8 @@ No wallet private key, real signature, payout account, RPC secret, live transact
 - Public demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
 - Submission packet: [docs/SUBMISSION-PACKET.md](docs/SUBMISSION-PACKET.md)
 - Demo script: [docs/DEMO-SCRIPT.md](docs/DEMO-SCRIPT.md)
+- Published article: [docs/ARTICLE.md](docs/ARTICLE.md)
+- Demo video: https://benitbuhner.github.io/zama-wrapper-registry-app/zama-wrapper-registry-demo.webm
 - Article draft: [docs/ARTICLE-DRAFT.md](docs/ARTICLE-DRAFT.md)
 - Form answers draft: [docs/FORM-ANSWERS-DRAFT.md](docs/FORM-ANSWERS-DRAFT.md)
 - Relayer user-decryption plan: [docs/RELAYER-USER-DECRYPTION-PLAN.md](docs/RELAYER-USER-DECRYPTION-PLAN.md)
