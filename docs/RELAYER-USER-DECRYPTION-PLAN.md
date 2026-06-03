@@ -21,6 +21,8 @@ The app already separates the decryption button from real relayer execution:
 - current public mode uses deterministic mock balances
 - readiness state marks balance decryption as an external gate
 - action plans identify user decryption as relayer-gated
+- `src/services/relayerUserDecryption.ts` validates and prepares the unsigned request payload shape needed for `userDecrypt`
+- tests cover missing handles, malformed addresses, and the documented 2048-bit batch limit
 
 ## Implementation Checklist
 
@@ -32,7 +34,7 @@ The app already separates the decryption button from real relayer execution:
 - Create the EIP-712 request with the selected contract address, start timestamp, and bounded duration.
 - Pass signature data to `userDecrypt`.
 - Display the decrypted balance result in the existing balance readout.
-- Add tests for request construction and fail-closed missing-wallet/missing-handle states.
+- Add tests for missing-wallet and missing-live-handle states once the wallet adapter is present.
 
 ## Fail-Closed Rules
 

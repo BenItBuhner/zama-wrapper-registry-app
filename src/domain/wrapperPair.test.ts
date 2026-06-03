@@ -4,7 +4,8 @@ import { listWrapperPairs } from "../services/mockRegistry";
 import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
-import { buildActionPlan } from "../services/wrapperActions";
+import { buildUserDecryptionDraft } from "../services/relayerUserDecryption";
+import { buildActionPlan, buildMockUserDecryptionDraft } from "../services/wrapperActions";
 
 describe("wrapper pair model", () => {
   it("formats fixed-point token amounts", () => {
@@ -47,6 +48,44 @@ describe("wrapper pair model", () => {
     expect(plan.faucet[0].status).toBe("requires-wallet");
     expect(plan.wrap.map((step) => step.status)).toEqual(["requires-wallet", "requires-wallet"]);
     expect(plan.unwrap.map((step) => step.status)).toEqual(["requires-relayer", "requires-relayer"]);
+  });
+
+  it("drafts relayer user-decryption requests without signing", () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+    const draft = buildMockUserDecryptionDraft(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+    expect(draft).toMatchObject({
+      handleContractPairs: [
+        {
+          handle: `mock-${sepoliaPair!.id}-balance-handle`,
+          contractAddress: sepoliaPair!.confidential.address,
+        },
+      ],
+      contractAddresses: [sepoliaPair!.confidential.address],
+      signerAddress: "0x1111111111111111111111111111111111111111",
+      startTimeStamp: "1780448000",
+      durationDays: "10",
+      totalBitLength: 64,
+    });
+  });
+
+  it("fails closed for invalid user-decryption drafts", () => {
+    const baseInput = {
+      handles: [{ handle: "0xabc", contractAddress: "0x1111111111111111111111111111111111111111", bitLength: 64 }],
+      userAddress: "0x2222222222222222222222222222222222222222",
+      publicKey: "public-key",
+      startTimestamp: 1780448000,
+      durationDays: 10,
+    };
+
+    expect(() => buildUserDecryptionDraft({ ...baseInput, handles: [] })).toThrow("At least one");
+    expect(() => buildUserDecryptionDraft({ ...baseInput, userAddress: "not-an-address" })).toThrow("Invalid Ethereum address");
+    expect(() =>
+      buildUserDecryptionDraft({
+        ...baseInput,
+        handles: [{ handle: "0xabc", contractAddress: baseInput.handles[0].contractAddress, bitLength: 2049 }],
+      }),
+    ).toThrow("exceeds 2048 bits");
   });
 
   it("separates local demo readiness from external submission gates", () => {

@@ -1,4 +1,5 @@
 import { formatTokenAmount, type WrapperPair } from "../domain/wrapperPair";
+import { buildUserDecryptionDraft } from "./relayerUserDecryption";
 
 export type ActionKind = "faucet" | "wrap" | "unwrap" | "decrypt";
 
@@ -57,4 +58,20 @@ export async function decryptMockBalance(pair: WrapperPair): Promise<string> {
   await Promise.resolve();
   const value = pair.network === "mainnet" ? 0n : 125_000_000n;
   return `${formatTokenAmount(value, pair.confidential.decimals)} ${pair.confidential.symbol}`;
+}
+
+export function buildMockUserDecryptionDraft(pair: WrapperPair, userAddress: string) {
+  return buildUserDecryptionDraft({
+    handles: [
+      {
+        handle: `mock-${pair.id}-balance-handle`,
+        contractAddress: pair.confidential.address,
+        bitLength: 64,
+      },
+    ],
+    userAddress,
+    publicKey: "mock-relayer-public-key",
+    startTimestamp: 1780448000,
+    durationDays: 10,
+  });
 }
