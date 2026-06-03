@@ -382,6 +382,7 @@ describe("wrapper pair model", () => {
         expect.stringContaining("DEMO-SCRIPT.md"),
         expect.stringContaining("ARTICLE-DRAFT.md"),
         expect.stringContaining("RELAYER-USER-DECRYPTION-PLAN.md"),
+        expect.stringContaining("FORM-ANSWERS-DRAFT.md"),
       ]),
     );
   });
@@ -395,6 +396,7 @@ describe("wrapper pair model", () => {
       "Demo script",
       "Article draft",
       "Relayer user-decryption plan",
+      "Form answers draft",
     ]);
     expect(packet.publicLinks.every((link) => link.href.startsWith("https://"))).toBe(true);
     expect(packet.validationCommands).toEqual(["bun run test", "bun run build", "bun run build:pages"]);
@@ -408,7 +410,7 @@ describe("wrapper pair model", () => {
     expect(packet.remainingExternalGates).toEqual(
       expect.arrayContaining([
         "Record and publish the demo video.",
-        "Submit the Zama bounty form with payout details.",
+        "Submit the Zama bounty form with the prepared answers and payout details.",
       ]),
     );
     expect(JSON.stringify(packet).toLowerCase()).not.toContain("private key");

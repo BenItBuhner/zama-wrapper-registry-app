@@ -5,6 +5,7 @@
 - Repository: https://github.com/BenItBuhner/zama-wrapper-registry-app
 - Demo: https://benitbuhner.github.io/zama-wrapper-registry-app/
 - GitHub Pages workflow: https://github.com/BenItBuhner/zama-wrapper-registry-app/actions/workflows/pages.yml
+- Form answers draft: https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/FORM-ANSWERS-DRAFT.md
 
 ## What This App Demonstrates
 
@@ -33,9 +34,9 @@ bun run build:pages
 
 Latest GitHub Pages validation:
 
-- Pages workflow `26858542545` passed test, build, artifact upload, and deployment for commit `38d9e6c29f6c48f6b76904a4a843335c406e654c`.
+- Pages workflow `26859741226` passed test, build, artifact upload, and deployment for commit `396b28b63a48e39a99dd1fd528e3cfd5210c41d7`.
 - `https://benitbuhner.github.io/zama-wrapper-registry-app/` returned HTTP 200.
-- Raw source URLs for `src/services/transactionIntents.ts` and `src/App.tsx` returned HTTP 200.
+- Raw source URLs for `src/services/submissionEvidence.ts` and `docs/SUBMISSION-PACKET.md` returned HTTP 200.
 
 Unsigned transaction-intent coverage:
 
@@ -47,7 +48,7 @@ Unsigned transaction-intent coverage:
 
 Evidence-packet coverage:
 
-- Public repository, GitHub Pages demo, submission packet, demo script, article draft, and relayer plan links are visible in the app.
+- Public repository, GitHub Pages demo, submission packet, demo script, article draft, relayer plan, and form-answer draft links are visible in the app.
 - Required local validation commands are visible in the app: `bun run test`, `bun run build`, and `bun run build:pages`.
 - Remaining external gates are explicitly separated from local validation so the app does not claim wallet signatures, transaction proof, video publication, article/X publication, or form submission before they happen.
 
@@ -58,6 +59,6 @@ Evidence-packet coverage:
 - Produce a real EIP-712 signature and relayer user-decryption response from a connected wallet.
 - Record a real demo video after the wallet and decryption path are exercised.
 - Publish the final article or X thread.
-- Submit the final Zama bounty form and payout details.
+- Submit the final Zama bounty form with the prepared answers and payout details.
 
 No private key, wallet seed, payout detail, RPC secret, signature, or transaction proof is committed here.

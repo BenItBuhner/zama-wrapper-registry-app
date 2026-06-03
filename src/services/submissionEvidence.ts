@@ -52,6 +52,11 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
         href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/RELAYER-USER-DECRYPTION-PLAN.md",
         status: "ready",
       },
+      {
+        label: "Form answers draft",
+        href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/FORM-ANSWERS-DRAFT.md",
+        status: "ready",
+      },
     ],
     validationCommands: ["bun run test", "bun run build", "bun run build:pages"],
     checklist: [
@@ -86,7 +91,7 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       "Run live relayer SDK user decryption against a real encrypted balance handle.",
       "Record and publish the demo video.",
       "Publish the article or X thread from the prepared draft.",
-      "Submit the Zama bounty form with payout details.",
+      "Submit the Zama bounty form with the prepared answers and payout details.",
     ],
   };
 }
