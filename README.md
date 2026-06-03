@@ -1,0 +1,59 @@
+# Zama Confidential Wrapper Registry App
+
+Local bounty workspace for Zama Developer Program Mainnet Season 3 Bounty Track.
+
+Goal: build a production-ready dApp that surfaces ERC-20 to ERC-7984 wrapper pairs on Sepolia and Ethereum mainnet, supports wrap/unwrap, decrypts ERC-7984 balances through the user-decryption flow, and includes a Sepolia faucet flow for official cTokenMocks.
+
+This workspace is local-only until the external gates are satisfied:
+
+- public deployment
+- real wallet signing
+- real-person demo video
+- X thread or article
+- final Zama form submission
+- payout wallet/account handling
+
+## Current Phase
+
+Phase 1 builds a working UI and typed integration boundaries with mocked registry/decryption data so most behavior is testable without credentials.
+
+Current implemented surface:
+
+- wrapper-pair registry browser for Sepolia and Ethereum mainnet
+- official-address seeded local mode for deterministic tests and demos
+- optional `viem` chain-read mode when `VITE_SEPOLIA_RPC_URL` or `VITE_MAINNET_RPC_URL` is present
+- registry validity checks using `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress`
+- explicit wallet/relayer action plans for faucet, approve, wrap, unwrap, finalize, and user decryption
+- submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
+
+```bash
+bun install
+bun run test
+bun run build
+```
+
+## Integration Notes
+
+- Registry reads follow Zama's documented `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress` patterns, including the validity flag check before use.
+- Wrapper flow follows the documented ERC-20 approval before wrap, and the two-step unwrap plus public decryption/finalize flow.
+- Official deployed address seeds come from `zama-ai/protocol-apps` address docs for Ethereum mainnet and Sepolia.
+- Without `VITE_SEPOLIA_RPC_URL` or `VITE_MAINNET_RPC_URL`, the app uses local seeded data so tests/builds stay deterministic.
+
+## Submission Gates Still Not Claimed
+
+This repository is not a final bounty submission yet. Remaining external gates:
+
+- deploy the app to a durable public URL
+- connect a wallet and execute Sepolia-only demo transactions
+- wire the relayer SDK user-decryption flow with EIP-712 signatures
+- record a real demo video
+- publish the required article or X thread
+- submit the final Zama form and payout details
+
+No wallet private key, signature, payout account, RPC secret, public deployment, or final form submission is included in this local handoff.
+
+## References
+
+- Zama protocol app addresses: https://github.com/zama-ai/protocol-apps/blob/main/docs/addresses.md
+- Registry contract guide: https://docs.zama.org/protocol/protocol-apps/registry-contract
+- Confidential wrapper guide: https://docs.zama.org/protocol/protocol-guides/confidential-wrapper
