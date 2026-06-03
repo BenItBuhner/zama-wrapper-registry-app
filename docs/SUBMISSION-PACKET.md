@@ -13,6 +13,10 @@
 - Supports optional live registry reads through `VITE_SEPOLIA_RPC_URL` and `VITE_MAINNET_RPC_URL`.
 - Validates registry pairs through `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress`.
 - Shows an explicit wallet action plan for faucet, approval, wrap, unwrap request, finalize, and user decryption.
+- Detects an injected EIP-1193 wallet provider without forcing connection.
+- Offers a user-clicked wallet connection path through `eth_requestAccounts`.
+- Checks the selected wrapper network through `eth_chainId` and offers a user-clicked `wallet_switchEthereumChain` path for Sepolia/mainnet alignment.
+- Prepares typed user-decryption signing payloads behind an explicit adapter boundary without forcing a real signature in the public demo.
 - Separates local-only proof from external gates so the app does not imply a wallet transaction happened before it did.
 
 ## Validation Evidence
@@ -25,16 +29,17 @@ bun run build
 bun run build:pages
 ```
 
-GitHub Pages validation:
+Latest GitHub Pages validation:
 
-- Pages workflow `26856900220` passed test, build, artifact upload, and deployment.
+- Pages workflow `26858151198` passed test, build, artifact upload, and deployment for commit `f5122e55349f1f67250575b79d82627f39f41bd5`.
 - `https://benitbuhner.github.io/zama-wrapper-registry-app/` returned HTTP 200.
-- Main JavaScript and CSS asset URLs returned HTTP 200.
+- Raw source URLs for the latest wallet/network boundary files returned HTTP 200.
 
 ## Remaining External Gates
 
 - Execute Sepolia-only demo transactions with a real wallet.
 - Wire the relayer SDK user-decryption flow against a real encrypted balance handle.
+- Produce a real EIP-712 signature and relayer user-decryption response from a connected wallet.
 - Record a real demo video after the wallet and decryption path are exercised.
 - Publish the final article or X thread.
 - Submit the final Zama bounty form and payout details.

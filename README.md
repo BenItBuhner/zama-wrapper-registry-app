@@ -24,6 +24,10 @@ Current implemented surface:
 - optional `viem` chain-read mode when `VITE_SEPOLIA_RPC_URL` or `VITE_MAINNET_RPC_URL` is present
 - registry validity checks using `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress`
 - explicit wallet/relayer action plans for faucet, approve, wrap, unwrap, finalize, and user decryption
+- injected wallet readiness via `eth_accounts`
+- explicit user-clicked wallet connection via `eth_requestAccounts`
+- selected-wrapper network readiness via `eth_chainId` plus user-clicked `wallet_switchEthereumChain`
+- EIP-712 user-decryption signing payload preparation behind a wallet adapter boundary
 - submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
 - public submission packet, demo script, article draft, and relayer user-decryption implementation plan
 
@@ -51,7 +55,7 @@ This repository is not a final bounty submission yet. Remaining external gates:
 - publish the required article or X thread outside this repository
 - submit the final Zama form and payout details
 
-No wallet private key, signature, payout account, RPC secret, public deployment, or final form submission is included in this local handoff.
+No wallet private key, real signature, payout account, RPC secret, live transaction proof, or final form submission is included in this handoff. The public GitHub Pages deployment is live and remains credential-free.
 
 ## Public Submission Assets
 

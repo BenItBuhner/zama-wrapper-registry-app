@@ -20,6 +20,8 @@ The app surfaces Sepolia and Ethereum mainnet wrapper pairs with:
 
 It also shows the operational sequence for faucet, approval, wrap, unwrap, finalize, and user decryption. This is intentionally explicit: users should see which steps need a wallet signature, which steps need relayer support, and which steps are only deterministic local proof until a live RPC or wallet is connected.
 
+The wallet boundary is separated from the registry browser. On page load, the app can inspect whether an injected EIP-1193 provider already exposes an account through `eth_accounts`, but it does not force a connection. The only path that calls `eth_requestAccounts` is the visible `Connect wallet` control. Network readiness is handled the same way: the app passively reads `eth_chainId`, compares it to the selected Sepolia or mainnet wrapper network, and only calls `wallet_switchEthereumChain` from an explicit user action.
+
 ## User Decryption Plan
 
 The final encrypted-balance flow follows Zama's relayer SDK user-decryption model:

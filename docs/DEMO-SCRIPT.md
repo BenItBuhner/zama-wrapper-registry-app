@@ -26,7 +26,15 @@ For each selected pair, point out:
 
 Select a Sepolia pair with faucet support.
 
-Show the faucet action plan and execute the faucet step only on Sepolia.
+Show the wallet boundary panel:
+
+- injected provider status
+- connected account status
+- typed user-decryption signing readiness
+- current chain ID
+- selected wrapper network match
+
+Click `Connect wallet` only when ready to request an account, then click the network switch control if the wallet is not on Sepolia. Show the faucet action plan and execute the faucet step only on Sepolia.
 
 ## 4. Wrap Flow
 
