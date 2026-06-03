@@ -4,7 +4,7 @@ import type { UserDecryptionDraft } from "./relayerUserDecryption";
 export interface Eip712Domain {
   name?: string;
   version?: string;
-  chainId?: number;
+  chainId?: number | bigint;
   verifyingContract?: string;
 }
 
@@ -16,13 +16,15 @@ export interface Eip712Field {
 export interface UserDecryptionSigningPayload {
   domain: Eip712Domain;
   types: {
+    EIP712Domain?: Eip712Field[];
     UserDecryptRequestVerification: Eip712Field[];
   };
   message: {
     publicKey: string;
-    contractAddresses: string[];
+    contractAddresses: readonly string[];
     startTimestamp: string;
     durationDays: string;
+    extraData?: string;
   };
 }
 

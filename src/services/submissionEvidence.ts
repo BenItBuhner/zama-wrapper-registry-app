@@ -58,6 +58,11 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
         status: "ready",
       },
       {
+        label: "Live relayer source",
+        href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/src/services/liveRelayerUserDecryption.ts",
+        status: "ready",
+      },
+      {
         label: "Form answers draft",
         href: "https://github.com/BenItBuhner/zama-wrapper-registry-app/blob/main/docs/FORM-ANSWERS-DRAFT.md",
         status: "ready",
@@ -83,7 +88,7 @@ export function buildSubmissionEvidencePacket(): SubmissionEvidencePacket {
       {
         label: "Relayer user-decryption boundary",
         status: "local-validation",
-        detail: "Request and signing payload shapes are typed, tested, and wired into explicit UI controls; live relayer SDK execution still needs a real encrypted handle and wallet signature.",
+        detail: "@zama-fhe/relayer-sdk is installed and the live init/EIP-712/userDecrypt boundary is typed and tested; live execution still needs a real encrypted handle and wallet signature.",
       },
       {
         label: "Final bounty evidence",

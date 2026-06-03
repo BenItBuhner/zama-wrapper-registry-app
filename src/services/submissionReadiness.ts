@@ -71,7 +71,7 @@ export function buildSubmissionReadiness(hasChainRpc: boolean): ReadinessItem[] 
     {
       label: "Balance decryption",
       status: "external-gate",
-      detail: "Typed-data request preparation and explicit wallet-signature controls are wired; live completion requires a real signature, encrypted handle, and relayer SDK execution.",
+      detail: "@zama-fhe/relayer-sdk init, official EIP-712 creation, signing, and userDecrypt boundaries are wired and tested; live completion requires a real signature and encrypted handle.",
     },
     {
       label: "Submission assets",

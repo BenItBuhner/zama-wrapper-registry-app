@@ -28,7 +28,7 @@ Confidential Wrapper Registry is a browser dApp for inspecting Zama ERC-20 to ER
 - Network readiness and user-clicked chain switching through `eth_chainId` and `wallet_switchEthereumChain`.
 - Sepolia faucet, ERC-20 approval, and wrapper `wrap(uint256)` transaction intent review plus explicit Sepolia-only wallet submission controls.
 - Fail-closed relayer-gated unwrap and finalize intent placeholders.
-- Typed relayer user-decryption draft and EIP-712 signing boundary.
+- Typed relayer user-decryption draft, EIP-712 signing boundary, and `@zama-fhe/relayer-sdk` live execution boundary.
 - Public evidence packet with links, validation commands, completed local boundaries, and remaining external gates.
 
 ## Validation
@@ -44,9 +44,9 @@ git diff --check
 
 Latest verified result:
 
-- Commit: `396b28b63a48e39a99dd1fd528e3cfd5210c41d7`
-- Test result: `22/22`
-- GitHub Pages workflow: `26859741226`
+- Commit: pending latest commit after relayer SDK boundary publication
+- Test result: `27/27`
+- GitHub Pages workflow: pending latest deployment after relayer SDK boundary publication
 - Public demo: HTTP `200`
 - Raw evidence service: HTTP `200` at `src/services/submissionEvidence.ts`
 - Raw submission packet: HTTP `200` at `docs/SUBMISSION-PACKET.md`
@@ -67,7 +67,7 @@ Pending. Add Sepolia transaction hashes after executing the wallet-gated faucet,
 
 ## User-Decryption Evidence
 
-Pending. Add relayer SDK user-decryption output after a real encrypted balance handle, EIP-712 signature, and relayer response are available.
+Pending. The source now includes the live `@zama-fhe/relayer-sdk` init/EIP-712/userDecrypt boundary. Add relayer SDK user-decryption output after a real encrypted balance handle, EIP-712 signature, and relayer response are available.
 
 ## Payout Details
 

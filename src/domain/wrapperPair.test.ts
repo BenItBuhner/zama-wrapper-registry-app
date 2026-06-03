@@ -4,6 +4,7 @@ import { listWrapperPairs } from "../services/mockRegistry";
 import { networkConfigs, seededOfficialPairs } from "../config/networks";
 import { makeMockRegistryDataSource } from "../services/registryClient";
 import { buildLiveDemoPreflight } from "../services/liveDemoPreflight";
+import { prepareLiveRelayerUserDecryptionRequest, signAndRunLiveRelayerUserDecryption, type RelayerSdkModule } from "../services/liveRelayerUserDecryption";
 import { inspectProviderNetwork, switchProviderNetwork } from "../services/providerNetwork";
 import { buildSubmissionReadiness, zamaReferenceLinks } from "../services/submissionReadiness";
 import { buildDemoUnderlyingAmount, buildWrapperTransactionIntents } from "../services/transactionIntents";
@@ -293,6 +294,134 @@ describe("wrapper pair model", () => {
     ).resolves.toBe("0x110");
   });
 
+  it("prepares and runs live relayer user-decryption through the SDK boundary", async () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+    const draft = buildMockUserDecryptionDraft(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+    const calls: string[] = [];
+    const sdk: RelayerSdkModule = {
+      SepoliaConfig: {
+        relayerUrl: "https://relayer.test",
+        chainId: networkConfigs.sepolia.chainId,
+        gatewayChainId: 55815,
+        aclContractAddress: "0x1111111111111111111111111111111111111111",
+        kmsContractAddress: "0x1111111111111111111111111111111111111111",
+        inputVerifierContractAddress: "0x1111111111111111111111111111111111111111",
+        verifyingContractAddressDecryption: "0x1111111111111111111111111111111111111111",
+        verifyingContractAddressInputVerification: "0x1111111111111111111111111111111111111111",
+      },
+      async initSDK() {
+        calls.push("initSDK");
+        return true;
+      },
+      async createInstance() {
+        calls.push("createInstance");
+        return {
+          generateKeypair() {
+            calls.push("generateKeypair");
+            return { publicKey: "0xpublic", privateKey: "private" };
+          },
+          createEIP712(publicKey: string, contractAddresses: string[], startTimestamp: number, durationDays: number) {
+            calls.push("createEIP712");
+            return {
+              domain: {
+                name: "Decryption",
+                version: "1",
+                chainId: BigInt(networkConfigs.sepolia.chainId),
+                verifyingContract: "0x1111111111111111111111111111111111111111",
+              },
+              primaryType: "UserDecryptRequestVerification",
+              types: {
+                EIP712Domain: [
+                  { name: "name", type: "string" },
+                  { name: "version", type: "string" },
+                  { name: "chainId", type: "uint256" },
+                  { name: "verifyingContract", type: "address" },
+                ],
+                UserDecryptRequestVerification: [
+                  { name: "publicKey", type: "bytes" },
+                  { name: "contractAddresses", type: "address[]" },
+                  { name: "startTimestamp", type: "uint256" },
+                  { name: "durationDays", type: "uint256" },
+                  { name: "extraData", type: "bytes" },
+                ],
+              },
+              message: {
+                publicKey,
+                contractAddresses,
+                startTimestamp: startTimestamp.toString(),
+                durationDays: durationDays.toString(),
+                extraData: "0x",
+              },
+            };
+          },
+          async userDecrypt() {
+            calls.push("userDecrypt");
+            return { [draft.handleContractPairs[0].handle]: 125n };
+          },
+        } as never;
+      },
+    };
+
+    const request = await prepareLiveRelayerUserDecryptionRequest({
+      provider: {
+        async request() {
+          return null;
+        },
+      },
+      draft,
+      loadSdk: async () => sdk,
+    });
+    expect(request.payload.message).toMatchObject({ publicKey: "0xpublic", extraData: "0x" });
+    expect(request.privateKey).toBe("private");
+
+    await expect(
+      signAndRunLiveRelayerUserDecryption(
+        {
+          address: draft.signerAddress,
+          signTypedData: async (payload) => {
+            expect(payload.types.EIP712Domain?.map((field) => field.name)).toContain("chainId");
+            return "0xsigned";
+          },
+        },
+        request,
+      ),
+    ).resolves.toMatchObject({ detail: "Live relayer user-decryption request completed." });
+    expect(calls).toEqual(["initSDK", "createInstance", "generateKeypair", "createEIP712", "userDecrypt"]);
+  });
+
+  it("fails closed before live relayer user-decryption can run", async () => {
+    const sepoliaPair = seededOfficialPairs.find((pair) => pair.network === "sepolia");
+    expect(sepoliaPair).toBeDefined();
+    const draft = buildMockUserDecryptionDraft(sepoliaPair!, "0x1111111111111111111111111111111111111111");
+
+    await expect(prepareLiveRelayerUserDecryptionRequest({ provider: null, draft })).rejects.toThrow("No injected");
+    await expect(
+      signAndRunLiveRelayerUserDecryption(
+        { address: "0x2222222222222222222222222222222222222222", signTypedData: async () => "0xsigned" },
+        {
+          instance: {
+            async userDecrypt() {
+              return {};
+            },
+          },
+          handleContractPairs: draft.handleContractPairs,
+          privateKey: "private",
+          publicKey: "0xpublic",
+          contractAddresses: draft.contractAddresses,
+          signerAddress: draft.signerAddress,
+          startTimestamp: Number(draft.startTimeStamp),
+          durationDays: Number(draft.durationDays),
+          payload: {
+            domain: {},
+            types: { UserDecryptRequestVerification: [] },
+            message: { publicKey: "0xpublic", contractAddresses: draft.contractAddresses, startTimestamp: draft.startTimeStamp, durationDays: draft.durationDays },
+          },
+        },
+      ),
+    ).rejects.toThrow("does not match");
+  });
+
   it("adapts injected providers without touching real browser wallets", async () => {
     const calls: Array<{ method: string; params?: unknown[] }> = [];
     const provider: Eip1193Provider = {
@@ -540,6 +669,7 @@ describe("wrapper pair model", () => {
       "Published article",
       "Demo video",
       "Relayer user-decryption plan",
+      "Live relayer source",
       "Form answers draft",
     ]);
     expect(packet.publicLinks.every((link) => link.href.startsWith("https://"))).toBe(true);

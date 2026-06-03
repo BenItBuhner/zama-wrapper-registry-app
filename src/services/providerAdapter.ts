@@ -49,7 +49,7 @@ function signTypedDataV4(
   return provider
     .request({
       method: "eth_signTypedData_v4",
-      params: [signerAddress, JSON.stringify(payload)],
+      params: [signerAddress, JSON.stringify(payload, (_, value) => (typeof value === "bigint" ? value.toString() : value))],
     })
     .then((signature) => {
       if (typeof signature !== "string" || !signature.startsWith("0x")) {
@@ -58,4 +58,3 @@ function signTypedDataV4(
       return signature;
     });
 }
-
