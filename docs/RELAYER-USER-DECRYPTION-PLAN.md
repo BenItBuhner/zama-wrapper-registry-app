@@ -24,12 +24,14 @@ The app already separates the decryption button from real relayer execution:
 - `src/services/relayerUserDecryption.ts` validates and prepares the unsigned request payload shape needed for `userDecrypt`
 - `src/services/signingAdapter.ts` prepares the EIP-712 wallet-signing payload and reports wallet blockers without forcing a signature
 - `src/services/providerAdapter.ts` adapts an injected EIP-1193 provider into the signing boundary using `eth_requestAccounts`, `eth_accounts`, and `eth_signTypedData_v4`
+- `src/services/transactionIntents.ts` prepares unsigned faucet/approve/wrap calldata where inputs are deterministic and leaves unwrap/finalize calldata empty until relayer encrypted handles and proofs are available
 - tests cover missing handles, malformed addresses, the documented 2048-bit batch limit, missing wallet connection, missing signing capability, address mismatch, absent providers, malformed provider accounts, and fake-provider typed-data calls
 
 ## Implementation Checklist
 
 - Add `@zama-fhe/relayer-sdk` after confirming the currently recommended browser package version.
 - Connect the provider adapter boundary to the browser UI and supported wallet provider.
+- Confirm the Sepolia mock-token faucet ABI in the live demo before submitting the unsigned faucet intent through a wallet.
 - Retrieve the selected confidential token balance ciphertext handle from the wrapper or token contract.
 - Ensure ACL permissions exist for the handle before requesting user decryption.
 - Generate the keypair through the relayer instance in-browser.

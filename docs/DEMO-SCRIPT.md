@@ -36,19 +36,32 @@ Show the wallet boundary panel:
 
 Click `Connect wallet` only when ready to request an account, then click the network switch control if the wallet is not on Sepolia. Show the faucet action plan and execute the faucet step only on Sepolia.
 
-## 4. Wrap Flow
+## 4. Unsigned Transaction Intent Review
+
+Show the prepared transaction boundary panel before signing anything.
+
+For a Sepolia pair, point out:
+
+- faucet `mint(address,uint256)` intent requires a connected wallet address
+- approval `approve(address,uint256)` targets the underlying ERC-20
+- wrap `wrap(uint256)` targets the wrapper contract
+- unwrap and finalize remain relayer-gated and do not invent calldata before live encrypted handles and proofs exist
+
+For a mainnet pair, show that the faucet intent fails closed as not supported.
+
+## 5. Wrap Flow
 
 Show the approval step first, then the wrap step.
 
 Confirm the wrapper address before signing. Use only a small Sepolia test amount.
 
-## 5. Unwrap Flow
+## 6. Unwrap Flow
 
 Show the unwrap request step, then the finalize step after public decryption is available.
 
 Explain that unwrap is asynchronous and requires finalization proof handling.
 
-## 6. User Decryption
+## 7. User Decryption
 
 Show the relayer user-decryption path:
 
@@ -59,7 +72,7 @@ Show the relayer user-decryption path:
 - call `userDecrypt`
 - show the decrypted value only to the connected user
 
-## 7. Submission Wrap-Up
+## 8. Submission Wrap-Up
 
 Show the submission readiness panel and explain which gates are complete.
 

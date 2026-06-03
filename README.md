@@ -27,6 +27,7 @@ Current implemented surface:
 - injected wallet readiness via `eth_accounts`
 - explicit user-clicked wallet connection via `eth_requestAccounts`
 - selected-wrapper network readiness via `eth_chainId` plus user-clicked `wallet_switchEthereumChain`
+- unsigned transaction-intent review for Sepolia faucet, ERC-20 approval, wrapper wrap, relayer-gated unwrap, and finalize steps
 - EIP-712 user-decryption signing payload preparation behind a wallet adapter boundary
 - submission-readiness panel that marks local-only work separately from external deployment, signing, video, and form gates
 - public submission packet, demo script, article draft, and relayer user-decryption implementation plan
@@ -42,6 +43,7 @@ bun run build:pages
 
 - Registry reads follow Zama's documented `getTokenConfidentialTokenPairs` and `getConfidentialTokenAddress` patterns, including the validity flag check before use.
 - Wrapper flow follows the documented ERC-20 approval before wrap, and the two-step unwrap plus public decryption/finalize flow.
+- `src/services/transactionIntents.ts` prepares unsigned call data only where the app has deterministic inputs: Sepolia mock faucet, ERC-20 approval, and wrapper `wrap(uint256)`. Unwrap and finalize stay relayer-gated rather than inventing live encrypted-handle calldata.
 - Official deployed address seeds come from `zama-ai/protocol-apps` address docs for Ethereum mainnet and Sepolia.
 - Without `VITE_SEPOLIA_RPC_URL` or `VITE_MAINNET_RPC_URL`, the app uses local seeded data so tests/builds stay deterministic.
 

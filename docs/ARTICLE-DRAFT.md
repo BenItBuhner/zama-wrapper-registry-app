@@ -22,6 +22,8 @@ It also shows the operational sequence for faucet, approval, wrap, unwrap, final
 
 The wallet boundary is separated from the registry browser. On page load, the app can inspect whether an injected EIP-1193 provider already exposes an account through `eth_accounts`, but it does not force a connection. The only path that calls `eth_requestAccounts` is the visible `Connect wallet` control. Network readiness is handled the same way: the app passively reads `eth_chainId`, compares it to the selected Sepolia or mainnet wrapper network, and only calls `wallet_switchEthereumChain` from an explicit user action.
 
+The transaction boundary is also explicit. The app can prepare unsigned intent data for the deterministic pieces of the flow: Sepolia mock-token faucet mint, ERC-20 approval, and wrapper `wrap(uint256)`. It shows the target contract, method, chain ID, amount, and calldata before any wallet submit path exists. For relayer-dependent unwrap and finalization, the app records the target and required live inputs but keeps calldata empty until encrypted amount handles and public-decryption proofs are actually available.
+
 ## User Decryption Plan
 
 The final encrypted-balance flow follows Zama's relayer SDK user-decryption model:
